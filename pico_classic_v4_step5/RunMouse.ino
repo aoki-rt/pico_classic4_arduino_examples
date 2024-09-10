@@ -58,7 +58,7 @@ void RUN::accelerate(int len, int finish_speed) {
   while (1) {
     step_lr = TMC5240ReadXACTUAL();
     TMC5240Write(TMC5240_VMAX, (unsigned int)(speed / TMC5240_VELOCITY), (unsigned int)(speed / TMC5240_VELOCITY));
-    if(step_lr < obj_step){
+    if(step_lr > obj_step){
       break;
     }
   }
@@ -78,7 +78,7 @@ void RUN::oneStep(int len, int init_speed) {
   while (1) {
     step_lr = TMC5240ReadXACTUAL();
     TMC5240Write(TMC5240_VMAX, (unsigned int)(speed / TMC5240_VELOCITY), (unsigned int)(speed / TMC5240_VELOCITY));
-    if(step_lr < obj_step){
+    if(step_lr > obj_step){
       break;
     }
   }
@@ -87,7 +87,7 @@ void RUN::oneStep(int len, int init_speed) {
 void RUN::decelerate(int len, float init_speed) {
   int obj_step;
   max_speed = init_speed;
-  accel = 0.0;
+  accel = 1.5;
   TMC5240Write(TMC5240_XACTUAL, 0, 0);  //初期化 
   speed = min_speed = init_speed;
   TMC5240Write(TMC5240_VMAX, (unsigned int)(speed / TMC5240_VELOCITY), (unsigned int)(speed / TMC5240_VELOCITY));
@@ -107,7 +107,7 @@ void RUN::decelerate(int len, float init_speed) {
   while (1) {
     step_lr = TMC5240ReadXACTUAL();
     TMC5240Write(TMC5240_VMAX, (unsigned int)(speed / TMC5240_VELOCITY), (unsigned int)(speed / TMC5240_VELOCITY));
-    if(step_lr < obj_step){
+    if(step_lr > obj_step){
       break;
     }
   }

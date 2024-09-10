@@ -49,7 +49,6 @@ double g_min_speed;
 double g_accel = 0.0;
 volatile double g_speed = MIN_SPEED;
 
-//extern void RunInterruptControl(void);
 
 //割り込み
 //目標値の更新周期1kHz
@@ -68,9 +67,9 @@ void setup() {
   pinMode(LED2, OUTPUT);
   pinMode(LED3, OUTPUT);
 
-  pinMode(SW_L, INPUT);
-  pinMode(SW_C, INPUT);
-  pinMode(SW_R, INPUT);
+  pinMode(SW_L, INPUT_PULLUP);
+  pinMode(SW_C, INPUT_PULLUP);
+  pinMode(SW_R, INPUT_PULLUP);
 
   //motor disable
   pinMode(MOTOR_EN, OUTPUT);
