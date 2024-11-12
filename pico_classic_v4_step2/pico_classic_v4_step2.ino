@@ -13,14 +13,14 @@
 // limitations under the License.
 
 
-#define LED0 1
-#define LED1 2
-#define LED2 42
-#define LED3 41
+#define LED0 13
+#define LED1 14
+#define LED2 47
+#define LED3 48
 
-#define SW_L 10
-#define SW_C 11
-#define SW_R 12
+#define SW_L 16
+#define SW_C 15
+#define SW_R 18
 
 int g_state_r, g_state_c, g_state_l;
 

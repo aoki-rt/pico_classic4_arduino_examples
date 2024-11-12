@@ -13,10 +13,10 @@
 // limitations under the License.
 
 
-#define LED0 1
-#define LED1 2
-#define LED2 42
-#define LED3 41
+#define LED0 13
+#define LED1 14
+#define LED2 47
+#define LED3 48
 
 void setup()
 {
