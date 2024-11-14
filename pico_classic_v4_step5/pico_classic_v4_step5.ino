@@ -16,31 +16,30 @@
 #include "TMC5240.h"
 #include "RunMouse.h"
 
-#define LED0 1
-#define LED1 2
-#define LED2 42
-#define LED3 41
+#define LED0 13
+#define LED1 14
+#define LED2 47
+#define LED3 48
 
-#define SW_R 12
-#define SW_C 11
-#define SW_L 10
+#define SW_R 18
+#define SW_C 15
+#define SW_L 16
 
-#define MOTOR_EN 9
+#define MOTOR_EN 17
 
-#define SPI_CLK  13
-#define SPI_MOSI 14
-#define SPI_CS   21 //左モータ
-#define SPI_CS2   3 //右モータ
-#define SPI_CS3  47 //ジャイロ
-#define SPI_MISO 46
+#define SPI_CLK 39
+#define SPI_MOSI 42
+#define SPI_CS 40   //左モータ
+#define SPI_CS2 3   //右モータ
+#define SPI_CS3 46  //ジャイロ
+#define SPI_MISO 41
 
-#define MIN_HZ 40.0
-#define TIRE_DIAMETER (48.10)
+#define TIRE_DIAMETER (48.00)
 #define PULSE TMC5240_PULSE
 
-#define MIN_SPEED (MIN_HZ * PULSE)
+#define MIN_SPEED 40
 
-hw_timer_t * g_timer0 = NULL;
+hw_timer_t* g_timer0 = NULL;
 
 portMUX_TYPE g_timer_mux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -52,10 +51,9 @@ volatile double g_speed = MIN_SPEED;
 
 //割り込み
 //目標値の更新周期1kHz
-void IRAM_ATTR onTimer0(void)
-{
+void IRAM_ATTR onTimer0(void) {
   portENTER_CRITICAL_ISR(&g_timer_mux);  //割り込み禁止
-  RunInterruptControl();
+  runInterruptControl();
   portEXIT_CRITICAL_ISR(&g_timer_mux);  //割り込み許可
 }
 
@@ -82,8 +80,10 @@ void setup() {
 
   digitalWrite(MOTOR_EN, LOW);
   delay(1);
-  TMC5240Init();
+  g_tmc5240.init();
   digitalWrite(MOTOR_EN, HIGH);
+
+  Serial.begin(115200);
 
 }
 

@@ -13,10 +13,10 @@
 // limitations under the License.
 
 
-#define SLED_FR 16
-#define SLED_FL 15
-#define SLED_R 18
-#define SLED_L 17
+#define SLED_FR 9
+#define SLED_FL 10
+#define SLED_R 11
+#define SLED_L 12
 
 #define AD4 7
 #define AD3 6
