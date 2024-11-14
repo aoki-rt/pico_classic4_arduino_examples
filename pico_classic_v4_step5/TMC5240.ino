@@ -30,9 +30,9 @@ unsigned int TMC5240::readXactual(void) {
 
   portENTER_CRITICAL_ISR(&timerMux2);
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS, LOW);
+  digitalWrite(SPI_CS_L, LOW);
   SPI.transfer(spi_write_read_data, 5);
-  digitalWrite(SPI_CS, HIGH);
+  digitalWrite(SPI_CS_L, HIGH);
   SPI.endTransaction();
 
   spi_write_read_data[0] = TMC5240_XACTUAL | TMC5240_READ;
@@ -42,9 +42,9 @@ unsigned int TMC5240::readXactual(void) {
   spi_write_read_data[4] = 0xff;
 
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS, LOW);
+  digitalWrite(SPI_CS_L, LOW);
   SPI.transfer(spi_write_read_data, 5);
-  digitalWrite(SPI_CS, HIGH);
+  digitalWrite(SPI_CS_L, HIGH);
   SPI.endTransaction();
 
   data_l = ((unsigned int)spi_write_read_data[1] << 24) | ((unsigned int)spi_write_read_data[2] << 16) | ((unsigned int)spi_write_read_data[3] << 8) | ((unsigned int)spi_write_read_data[4]);
@@ -60,9 +60,9 @@ unsigned int TMC5240::readXactual(void) {
   spi_write_read_data[4] = 0xff;
 
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS2, LOW);
+  digitalWrite(SPI_CS_R, LOW);
   SPI.transfer(spi_write_read_data, 5);
-  digitalWrite(SPI_CS2, HIGH);
+  digitalWrite(SPI_CS_R, HIGH);
   SPI.endTransaction();
 
   spi_write_read_data[0] = TMC5240_XACTUAL | TMC5240_READ;
@@ -72,9 +72,9 @@ unsigned int TMC5240::readXactual(void) {
   spi_write_read_data[4] = 0xff;
 
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS2, LOW);
+  digitalWrite(SPI_CS_R, LOW);
   SPI.transfer(spi_write_read_data, 5);
-  digitalWrite(SPI_CS2, HIGH);
+  digitalWrite(SPI_CS_R, HIGH);
   SPI.endTransaction();
   portEXIT_CRITICAL_ISR(&timerMux2);
 
@@ -95,9 +95,9 @@ void TMC5240::write(unsigned char add, unsigned int data_l, unsigned int data_r)
   spi_write_data[4] = (unsigned char)data_l;
 
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS, LOW);
+  digitalWrite(SPI_CS_L, LOW);
   SPI.transfer(spi_write_data, 5);
-  digitalWrite(SPI_CS, HIGH);
+  digitalWrite(SPI_CS_L, HIGH);
   SPI.endTransaction();
 
   spi_write_data[0] = add | TMC5240_WRITE;
@@ -107,9 +107,9 @@ void TMC5240::write(unsigned char add, unsigned int data_l, unsigned int data_r)
   spi_write_data[4] = (unsigned char)data_r;
 
   SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE3));
-  digitalWrite(SPI_CS2, LOW);
+  digitalWrite(SPI_CS_R, LOW);
   SPI.transfer(spi_write_data, 5);
-  digitalWrite(SPI_CS2, HIGH);
+  digitalWrite(SPI_CS_R, HIGH);
   SPI.endTransaction();
   portEXIT_CRITICAL_ISR(&timerMux2);
 }
@@ -117,12 +117,12 @@ void TMC5240::write(unsigned char add, unsigned int data_l, unsigned int data_r)
 void TMC5240::init(void) {
   SPI.begin(SPI_CLK, SPI_MISO, SPI_MOSI);
 
-  pinMode(SPI_CS, OUTPUT);   //left
-  pinMode(SPI_CS2, OUTPUT);  //right
-  pinMode(SPI_CS3, OUTPUT);
-  digitalWrite(SPI_CS, HIGH);
-  digitalWrite(SPI_CS2, HIGH);
-  digitalWrite(SPI_CS3, HIGH);
+  pinMode(SPI_CS_L, OUTPUT);   //left
+  pinMode(SPI_CS_R, OUTPUT);  //right
+  pinMode(SPI_CS_J, OUTPUT);
+  digitalWrite(SPI_CS_L, HIGH);
+  digitalWrite(SPI_CS_R, HIGH);
+  digitalWrite(SPI_CS_J, HIGH);
 
   g_tmc5240.write(TMC5240_DRV_CONF, 0x00000031, 0x00000031);    //Current Range 2A 800V/us
   g_tmc5240.write(TMC5240_IHOLD_IRUN, 0x01041C03, 0x01041C03);  //IHOLDDELAY=4 IRUN=28/32 IHOLD=3/32 2A設定時ピーク1.5A、実効値1.06A

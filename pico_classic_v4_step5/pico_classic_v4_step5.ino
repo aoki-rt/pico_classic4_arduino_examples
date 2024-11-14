@@ -21,23 +21,23 @@
 #define LED2 47
 #define LED3 48
 
+#define SW_L 16
 #define SW_R 18
 #define SW_C 15
-#define SW_L 16
 
 #define MOTOR_EN 17
 
 #define SPI_CLK 39
 #define SPI_MOSI 42
-#define SPI_CS 40   //左モータ
-#define SPI_CS2 3   //右モータ
-#define SPI_CS3 46  //ジャイロ
 #define SPI_MISO 41
+#define SPI_CS_L 40   //左モータ
+#define SPI_CS_R 3   //右モータ
+#define SPI_CS_J 46  //ジャイロ
 
 #define TIRE_DIAMETER (48.00)
 #define PULSE TMC5240_PULSE
 
-#define MIN_SPEED 40
+#define MIN_SPEED 30
 
 hw_timer_t* g_timer0 = NULL;
 

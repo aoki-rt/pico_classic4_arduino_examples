@@ -70,7 +70,7 @@ void RUN::stop(void) {
 void RUN::accelerate(int len, int finish_speed) {
   int obj_step;
 
-  accel = 1.0;
+  accel = 1.5;
   speed = min_speed = MIN_SPEED;
   max_speed = finish_speed;
   dirSpeedSet(MOT_FORWARD, MOT_FORWARD, MIN_SPEED, e_counter_clear);
@@ -107,7 +107,7 @@ void RUN::oneStep(int len, int init_speed) {
 void RUN::decelerate(int len, float init_speed) {
   int obj_step;
 
-  accel = 1.0;
+  accel = 1.5;
   max_speed = init_speed;
   speed = min_speed = init_speed;
   dirSpeedSet(MOT_FORWARD, MOT_FORWARD, speed, e_counter_clear);
@@ -122,7 +122,7 @@ void RUN::decelerate(int len, float init_speed) {
     Serial.printf(" pre %d %d %d\n\r",(int)step_lr_len,len,(int)speed);
   }
 
-  accel = -1.0;
+  accel = -1.5;
   min_speed = MIN_SPEED;
 
   while (1) {
