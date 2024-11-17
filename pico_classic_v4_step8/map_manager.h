@@ -1,3 +1,17 @@
+// Copyright 2024 RT Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #ifndef MAP_MANAGER_H_
 #define MAP_MANAGER_H_
 
@@ -32,32 +46,39 @@ class MapManager
 {
 public:
   MapManager();
+  virtual ~MapManager();
 
+  t_position mypos;
+  short goal_mx, goal_my;
+
+  void axisUpdate(void);
+  void nextDir(t_direction dir);
+  t_direction nextDirGet(char x, char y, t_direction_glob * dir);
+  t_direction nextDir2Get(short x, short y, t_direction_glob * dir);
   void positionInit(void);
+  void wallDataSet(unsigned char x, unsigned char y, t_direction_glob dir, char data);
+  char wallDataGet(unsigned char x, unsigned char y, t_direction_glob dir);
+  void wallSet(bool IS_SEN_FR, bool IS_SEN_R, bool IS_SEN_L);
+
+
   void setMyPosDir(t_direction_glob dir);
   short getMyPosX(void);
   short getMyPosY(void);
-  char getWallData(unsigned char x, unsigned char y, t_direction_glob dir);
-  void setWallData(unsigned char x, unsigned char y, t_direction_glob dir, char data);
   char getGoalX(void);
   char getGoalY(void);
   void setGoalX(short data);
   void setGoalY(short data);
-  void axisUpdate(void);
-  void nextDir(t_direction dir);
-  void setWall(bool IS_SEN_FR, bool IS_SEN_R, bool IS_SEN_L);
-  t_direction getNextDir(char x, char y, t_direction_glob * dir);
-  t_direction getNextDir2(short x, short y, t_direction_glob * dir);
+
 
 private:
   unsigned short steps_map[MAZESIZE_X][MAZESIZE_Y];  //歩数マップ
   t_wall wall[MAZESIZE_X][MAZESIZE_Y];               //壁の情報を格納する構造体配列
-  t_position mypos;
-  short goal_mx, goal_my;
 
-  void makeSearchMap(int x, int y);
-  void makeMap2(int x, int y);
-  int getPriority(unsigned char x, unsigned char y, t_direction_glob dir);
+  void searchMapMake(int x, int y);
+  void map2Make(int x, int y);
+  int priorityGet(unsigned char x, unsigned char y, t_direction_glob dir);
 };
+
+extern MapManager g_map;
 
 #endif  // MAP_MANAGER_H_

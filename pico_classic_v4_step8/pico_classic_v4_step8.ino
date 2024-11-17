@@ -12,118 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "FS.h"
-#include "SPIFFS.h"
+#include "adjust.h"
+#include <ESPAsyncWebSrv.h>
 #include "device.h"
+#include "fast.h"
+#include <FS.h>
+#include <LittleFS.h>
 #include "map_manager.h"
-#include "mytypedef.h"
+#include "misc.h"
 #include "parameter.h"
-#include "SPI.h"
+#include "run.h"
+#include "search.h"
+#include "sensor.h"
+#include <SPI.h>
 #include "TMC5240.h"
+#include <WiFi.h>
 
-signed char g_mode;
-short g_battery_value;
-t_sensor g_sen_r, g_sen_l, g_sen_fr, g_sen_fl;
-t_control g_con_wall;
-
-volatile double g_accel;
-double g_max_speed, g_min_speed;
-volatile double g_speed;
-volatile bool g_motor_move;
-MapManager g_map_control;
-
-void setup()
-{
+void setup() {
   // put your setup code here, to run once:
+  deviceInit();
+  flashBegin();
+  paramRead();
+  g_tmc5240.init();
 
-  initAll();
+  motorDisable();
+  buzzerEnable(INC_FREQ);
+  delay(80);
+  buzzerDisable();
 
-  disableBuzzer();
-  g_mode = 1;
+  g_misc.mode_select = 1;
 }
 
-void loop()
-{
+void loop() {
   // put your main code here, to run repeatedly:
-  setLED(g_mode);
-  switch (getSW()) {
-    case SW_LM:
-      g_mode = decButton(g_mode, 1, 15);
-      break;
+  ledSet(g_misc.mode_select);
+  switch (switchGet()) {
     case SW_RM:
-      g_mode = incButton(g_mode, 15, 1);
+      g_misc.mode_select = g_misc.buttonInc(g_misc.mode_select, 15, 1);
+      break;
+    case SW_LM:
+      g_misc.mode_select = g_misc.buttonDec(g_misc.mode_select, 1, 15);
       break;
     case SW_CM:
-      okButton();
-      execByMode(g_mode);
+      g_misc.buttonOk();
+      g_misc.modeExec(g_misc.mode_select);
       break;
   }
   delay(1);
-}
-
-void execByMode(int mode)
-{
-  enableMotor();
-  delay(1000);
-
-  switch (mode) {
-    case 1:
-      searchLefthand();
-      break;
-    case 2:  //足立法
-      g_map_control.positionInit();
-      searchAdachi(g_map_control.getGoalX(), g_map_control.getGoalY());
-      rotate(right, 2);
-      g_map_control.nextDir(right);
-      g_map_control.nextDir(right);
-      goalAppeal();
-      searchAdachi(0, 0);
-      rotate(right, 2);
-      g_map_control.nextDir(right);
-      g_map_control.nextDir(right);
-      mapWrite();
-      break;
-    case 3:  //最短走行
-      copyMap();
-      g_map_control.positionInit();
-      fastRun(g_map_control.getGoalX(), g_map_control.getGoalY());
-      rotate(right, 2);
-      g_map_control.nextDir(right);
-      g_map_control.nextDir(right);
-      goalAppeal();
-      fastRun(0, 0);
-      rotate(right, 2);
-      g_map_control.nextDir(right);
-      g_map_control.nextDir(right);
-      break;
-    case 4:
-      break;
-    case 5:
-      break;
-    case 6:
-      break;
-    case 7:
-      break;
-    case 8:
-      break;
-    case 9:
-      break;
-    case 10:
-      break;
-    case 11:
-      break;
-    case 12:
-      break;
-    case 13:
-      break;
-    case 14:
-      break;
-    case 15:
-      disableMotor();
-      adjustMenu();  //調整メニューに行く
-      break;
-    default:
-      break;
-  }
-  disableMotor();
 }

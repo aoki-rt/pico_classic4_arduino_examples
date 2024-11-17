@@ -1,7 +1,20 @@
+// Copyright 2024 RT Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 #ifndef TMC5240_H_
 #define TMC5240_H_
-
-#include "device.h"
 
 #define TMC5240_READ 0x00
 #define TMC5240_WRITE 0x80
@@ -9,7 +22,7 @@
 //General Configuration Register
 #define TMC5240_GCONF 0x00
 #define TMC5240_GSTAT 0x01
-#define TMC5240_IFCNT 0x02 //read only
+#define TMC5240_IFCNT 0x02  //read only
 #define TMC5240_NODECONFIG 0x03
 #define TMC5240_IOIN 0x04
 #define TMC5240_XCOMPARE 0x05
@@ -87,15 +100,18 @@
 #define TMC5240_SG4_RESULT 0x75
 #define TMC5240_SG4_IND 0x76
 
-#define microstep 16
+class TMC5240 {
+private:
 
-#define TMC5240_PULSE (TIRE_DIAMETER * PI / (200.0*microstep))//　1/256 0.003
-#define TMC5240_VELOCITY (TMC5240_PULSE*0.739)//12400000/2/2^23=0.739 -50c
-//#define TMC5072_VELOCITY (TMC5072_PULSE*0.787)//13200000/2/2^23=0.787 +50c
+public:
+  unsigned int readXactual(void);
+  void write(unsigned char add, unsigned int data_l, unsigned int data_r);
+  void init(void);
+};
 
-unsigned int TMC5240ReadXACTUAL(void);
-void TMC5240Write(unsigned char add, unsigned int data_l, unsigned int data_r);
-void TMC5240Stop(void);
-void TMC5240Init(void);
 
-#endif  // TMC5072_H_
+extern TMC5240 g_tmc5240;
+
+
+
+#endif  // TMC5240_H_

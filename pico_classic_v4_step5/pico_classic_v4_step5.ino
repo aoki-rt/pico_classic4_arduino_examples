@@ -14,7 +14,7 @@
 
 #include "SPI.h"
 #include "TMC5240.h"
-#include "RunMouse.h"
+#include "run.h"
 
 #define LED0 13
 #define LED1 14
@@ -53,7 +53,7 @@ volatile double g_speed = MIN_SPEED;
 //目標値の更新周期1kHz
 void IRAM_ATTR onTimer0(void) {
   portENTER_CRITICAL_ISR(&g_timer_mux);  //割り込み禁止
-  runInterruptControl();
+  controlInterrupt();
   portEXIT_CRITICAL_ISR(&g_timer_mux);  //割り込み許可
 }
 
@@ -82,8 +82,6 @@ void setup() {
   delay(1);
   g_tmc5240.init();
   digitalWrite(MOTOR_EN, HIGH);
-
-  Serial.begin(115200);
 
 }
 

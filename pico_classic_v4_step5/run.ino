@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "TMC5240.h"
-#include "RunMouse.h"
+#include "run.h"
 
 RUN g_run;
 
@@ -27,7 +27,7 @@ RUN::~RUN() {
 }
 
 //割り込み
-void runInterruptControl(void) {
+void controlInterrupt(void) {
   g_run.interrupt();
 }
 
@@ -78,8 +78,6 @@ void RUN::accelerate(int len, int finish_speed) {
   while (1) {
     stepGet();
     speedSet(speed, speed);
-    ;
-
     if (step_lr > obj_step) {
       break;
     }
@@ -119,7 +117,6 @@ void RUN::decelerate(int len, float init_speed) {
     if ((int)(len - step_lr_len) < (int)(((speed * speed) - (MIN_SPEED * MIN_SPEED)) / (2.0 * 1000.0 * accel))) {
       break;
     }
-    Serial.printf(" pre %d %d %d\n\r",(int)step_lr_len,len,(int)speed);
   }
 
   accel = -1.5;
@@ -131,7 +128,6 @@ void RUN::decelerate(int len, float init_speed) {
     if (step_lr > obj_step) {
       break;
     }
-    Serial.printf(" after %d %d %d\n\r",(int)step_lr_len,len,(int)speed);
   }
 
   stop();

@@ -1,4 +1,4 @@
-// Copyright 2023 RT Corporation
+// Copyright 2024 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 
 hw_timer_t * g_timer0 = NULL;
 hw_timer_t * g_timer1 = NULL;
@@ -41,7 +42,7 @@ void controlInterruptStop(void) { timerStop(g_timer0); }
 void sensorInterruptStart(void) { timerStart(g_timer1); }
 void sensorInterruptStop(void) { timerStop(g_timer1); }
 
-void initAll(void)
+void deviceInit(void)
 {
   pinMode(LED0, OUTPUT);
   pinMode(LED1, OUTPUT);
@@ -71,13 +72,6 @@ void initAll(void)
   digitalWrite(MOTOR_EN, LOW);
 
 
-  if (!SPIFFS.begin(true)) {
-    while (1) {
-      Serial.println("SPIFFS Mount Failed");
-      delay(100);
-    }
-  }
-
   g_timer0 = timerBegin(1000000);
   timerAttachInterrupt(g_timer0, &onTimer0);
   timerAlarm(g_timer0, 1000, true, 0);
@@ -90,39 +84,20 @@ void initAll(void)
 
   Serial.begin(115200);
 
-  g_sen_r.ref = REF_SEN_R;
-  g_sen_l.ref = REF_SEN_L;
-  g_sen_r.th_wall = TH_SEN_R;
-  g_sen_l.th_wall = TH_SEN_L;
-
-  g_sen_fr.th_wall = TH_SEN_FR;
-  g_sen_fl.th_wall = TH_SEN_FL;
-
-  g_sen_r.th_control = CONTROL_TH_SEN_R;
-  g_sen_l.th_control = CONTROL_TH_SEN_L;
-
-  g_con_wall.kp = CON_WALL_KP;
-
-  g_map_control.setGoalX(GOAL_X);
-  g_map_control.setGoalY(GOAL_Y);
-
-  g_motor_move = false;
 
 
-  enableBuzzer(INC_FREQ);
-  delay(80);
-  disableBuzzer();
 }
 
 //LED
-void setLED(unsigned char data)
+void ledSet(unsigned char data)
 {
   digitalWrite(LED0, data & 0x01);
   digitalWrite(LED1, (data >> 1) & 0x01);
   digitalWrite(LED2, (data >> 2) & 0x01);
   digitalWrite(LED3, (data >> 3) & 0x01);
 }
-void setBLED(char data)
+
+void bledSet(char data)
 {
   if (data & 0x01) {
     digitalWrite(BLED0, HIGH);
@@ -137,24 +112,25 @@ void setBLED(char data)
 }
 
 //Buzzer
-void enableBuzzer(short f) { ledcWriteTone(BUZZER, f); }
-void disableBuzzer(void)
+void buzzerEnable(short f) { ledcWriteTone(BUZZER, f); }
+
+void buzzerDisable(void)
 {
   ledcWrite(BUZZER, 1024);  //duty 100% Buzzer OFF
 }
 
 //motor
-void enableMotor(void)
+void motorEnable(void)
 {
-  digitalWrite(MOTOR_EN, HIGH);  //Power ON
+  digitalWrite(MOTOR_EN, LOW);  //Power ON
 }
-void disableMotor(void)
+void motorDisable(void)
 {
-  digitalWrite(MOTOR_EN, LOW);  //Power OFF
+  digitalWrite(MOTOR_EN, HIGH);  //Power OFF
 }
 
 //SWITCH
-unsigned char getSW(void)
+unsigned char switchGet(void)
 {
   unsigned char ret = 0;
   if (digitalRead(SW_R) == LOW) {
@@ -179,7 +155,7 @@ unsigned char getSW(void)
 }
 
 //sensor
-unsigned short getSensorR(void)
+unsigned short sensorGetR(void)
 {
   digitalWrite(SLED_R, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
@@ -189,7 +165,7 @@ unsigned short getSensorR(void)
   digitalWrite(SLED_R, LOW);
   return tmp;
 }
-unsigned short getSensorL(void)
+unsigned short sensorGetL(void)
 {
   digitalWrite(SLED_L, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
@@ -199,7 +175,7 @@ unsigned short getSensorL(void)
   digitalWrite(SLED_L, LOW);
   return tmp;
 }
-unsigned short getSensorFL(void)
+unsigned short sensorGetFL(void)
 {
   digitalWrite(SLED_FL, HIGH);  //LED点灯
   for (int i = 0; i < WAITLOOP_SLED; i++) {
@@ -209,7 +185,7 @@ unsigned short getSensorFL(void)
   digitalWrite(SLED_FL, LOW);  //LED消灯
   return tmp;
 }
-unsigned short getSensorFR(void)
+unsigned short sensorGetFR(void)
 {
   digitalWrite(SLED_FR, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
@@ -219,8 +195,7 @@ unsigned short getSensorFR(void)
   digitalWrite(SLED_FR, LOW);
   return tmp;
 }
-short getBatteryVolt(void)
+short batteryVoltGet(void)
 {
-  short inputVoltage = (double)analogReadMilliVolts(AD0) / 10.0 * (10.0 + 51.0);
-  return inputVoltage;
+  return (double)analogReadMilliVolts(AD0) / 10.0 * (10.0 + 51.0) * 1.01;//1.01は補正値
 }
