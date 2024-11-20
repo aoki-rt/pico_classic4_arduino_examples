@@ -43,11 +43,6 @@ hw_timer_t* g_timer0 = NULL;
 
 portMUX_TYPE g_timer_mux = portMUX_INITIALIZER_UNLOCKED;
 
-double g_max_speed;
-double g_min_speed;
-double g_accel = 0.0;
-volatile double g_speed = MIN_SPEED;
-
 
 //割り込み
 //目標値の更新周期1kHz
