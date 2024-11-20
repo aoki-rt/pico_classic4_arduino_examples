@@ -31,9 +31,9 @@ typedef struct
   unsigned char north : 2;  //北の壁情報 bit1-0
 } t_wall;                   //壁情報を格納する構造体(ビットフィールド)
 
-typedef enum { front, right, left, rear } t_direction;
+typedef enum { front, right, left, rear } t_local_direction;
 
-typedef enum { north, east, south, west } t_direction_glob;
+typedef enum { north, east, south, west } t_global_direction;
 
 typedef struct
 {
