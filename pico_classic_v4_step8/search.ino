@@ -47,8 +47,8 @@ void SEARCH::lefthand(void) {
 }
 
 void SEARCH::adachi(char gx, char gy) {
-  t_direction_glob glob_nextdir;
-  t_direction temp_next_dir;
+  t_global_direction glob_nextdir;
+  t_local_direction temp_next_dir;
 
   switch (g_map.nextDirGet(gx, gy, &glob_nextdir)) {
     case front:

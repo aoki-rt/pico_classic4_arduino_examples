@@ -15,6 +15,7 @@
 
 #include "adjust.h"
 
+TaskHandle_t webserverHandle;
 
 ADJUST g_adjust;
 
@@ -27,8 +28,7 @@ ADJUST::~ADJUST() {
 }
 
 
-void ADJUST::mapView(void)
-{
+void ADJUST::mapView(void) {
   Serial.printf("\x1b[2j");
   Serial.printf("\x1b[0;0H");
   Serial.printf("\n\r+");
@@ -101,8 +101,7 @@ void ADJUST::mapView(void)
   }
 }
 
-void ADJUST::adcView(void)
-{
+void ADJUST::adcView(void) {
   motorDisable();
 
   while (1) {
@@ -118,8 +117,7 @@ void ADJUST::adcView(void)
   }
 }
 
-void ADJUST::straightCheck(int section_check)
-{
+void ADJUST::straightCheck(int section_check) {
   motorEnable();
   delay(1000);
   g_run.accelerate(HALF_SECTION, SEARCH_SPEED);
@@ -131,8 +129,7 @@ void ADJUST::straightCheck(int section_check)
   motorDisable();
 }
 
-void ADJUST::rotationCheck(void)
-{
+void ADJUST::rotationCheck(void) {
   motorEnable();
   delay(1000);
   for (int i = 0; i < 8; i++) {
@@ -141,8 +138,7 @@ void ADJUST::rotationCheck(void)
   motorDisable();
 }
 
-void ADJUST::menu(void)
-{
+void ADJUST::menu(void) {
   unsigned char l_mode = 1;
   char LED3_data;
   char sw;
@@ -176,12 +172,15 @@ void ADJUST::menu(void)
   }
 }
 
-unsigned char ADJUST::modeExec(unsigned char l_mode)
-{
+unsigned char ADJUST::modeExec(unsigned char l_mode) {
   motorDisable();
   switch (l_mode) {
     case 1:
-      WebServerSetup();
+      xTaskCreateUniversal(
+         WebServerSetup, "webserverTask", 4096,
+        NULL, 0, &webserverHandle,
+        CONFIG_ARDUINO_RUNNING_CORE);
+
       break;
     case 2:
       straightCheck(9);
@@ -202,6 +201,7 @@ unsigned char ADJUST::modeExec(unsigned char l_mode)
       break;
 
     default:
+      vTaskDelete(webserverHandle);
       return 1;
       break;
   }

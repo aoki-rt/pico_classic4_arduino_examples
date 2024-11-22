@@ -15,14 +15,32 @@
 
 AsyncWebServer server(80);
 
+#ifdef AP_MODE
 const char* ssid = "PICO4";
 const char* password = "12345678";
+#else
+const char* ssid = "xxx";
+const char* password = "yyyyyy";
+#endif
 
-void WebServerSetup(void) {
 
+
+void WebServerSetup(void * pvParameters) {
+
+#ifdef AP_MODE
   WiFi.softAP(ssid, password);
   IPAddress myIP = WiFi.softAPIP();
   Serial.println(myIP);
+#else
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.printf("WiFi Failed!\n");
+    return;
+  }
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+#endif
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
     String html = "";
@@ -49,23 +67,26 @@ void WebServerSetup(void) {
     html += "<form action=\"/get\">";
 
     html += "<p><h2>battery Value</h2></p>";
-    html += String(g_sensor.battery_value)+"mV";
-    html += "<br>";
+    html += "<table align=\"center\">";
+    html += "<tr><td id=\"voltage\">";
+    html += String(g_sensor.battery_value);
+    html += "</td></tr>";
+    html += "</table>";
     html += "<br>";
 
     html += "<p><h2>Sensor Value</h2></p>";
-    html += "<table align=\"center\">";
+    html += "<table align=\"center\" border=\"1\">";
     html += "<tr><th></th><th>Left</th><th>Right</th></tr>";
-    html += "<tr><th>SIDE VALUE</th><td><input name=\"ref_left\" id=\"left_value\" type=\"text\" size=\"10\" value=";
+    html += "<tr><th>SIDE VALUE</th><td id=\"left_value\">";
     html += String(g_sensor.sen_l.value);
-    html += "></td><td><input name=\"ref_right\" id=\"right_value\" type=\"text\" size=\"10\" value=";
+    html += "</td><td id=\"right_value\">";
     html += String(g_sensor.sen_r.value);
-    html += "></td></tr>";
-    html += "<tr><th>FRONT VALUE</th><td><input name=\"th_left\" id=\"left_front_value\" type=\"text\" size=\"10\" value=";
+    html += "</td></tr>";
+    html += "<tr><th>FRONT VALUE</th><td id=\"left_front_value\">";
     html += String(g_sensor.sen_fl.value);
-    html += "></td><td><input name=\"th_right\" id=\"right_front_value\" type=\"text\" size=\"10\" value=";
+    html += "</td><td id=\"right_front_value\">";
     html += String(g_sensor.sen_fr.value);
-    html += "></td></tr>";
+    html += "</td></tr>";
     html += "</table>";
     html += "<br>";
     html += "<br>";
@@ -73,11 +94,11 @@ void WebServerSetup(void) {
     html += "<p><h2>Tire Paramter</h2></p>";
     html += "<table align=\"center\">";
     html += "<tr><th>TIRE_DIAMETER</th><td><input name=\"tire_dia\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tire_diameter)+"mm";
-    html += "></td></tr>";
+    html += String(g_run.tire_diameter);
+    html += ">mm</td></tr>";
     html += "<tr><th>TREAD_WIDTH</th><td><input name=\"tread_width\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tread_width)+"mm";
-    html += "></td></tr>";
+    html += String(g_run.tread_width);
+    html += ">mm</td></tr>";
     html += "</table>";
     html += "<br>";
     html += "<br>";
@@ -118,12 +139,103 @@ void WebServerSetup(void) {
     html += "<input type=\"submit\" value=\"Save\">";
     html += "</form><br>";
     html += "</body>";
+    html += "<script>";
+
+    html += "var getVoltage = function () {";
+    html += "var xhr = new XMLHttpRequest();";
+    html += "xhr.onreadystatechange = function() {";
+    html += "if (this.readyState == 4 && this.status == 200) {";
+    html += "document.getElementById(\"voltage\").innerHTML = this.responseText;";
+    html += "}";
+    html += "};";
+    html += "xhr.open(\"GET\", \"/voltage\", true);";
+    html += "xhr.send(null);";
+    html += "};";
+    html += "setInterval(getVoltage, 1000);";
+
+    html += "var getLeftValue = function () {";
+    html += "var xhr = new XMLHttpRequest();";
+    html += "xhr.onreadystatechange = function() {";
+    html += "if (this.readyState == 4 && this.status == 200) {";
+    html += "document.getElementById(\"left_value\").innerHTML = this.responseText;";
+    html += "}";
+    html += "};";
+    html += "xhr.open(\"GET\", \"/left_value\", true);";
+    html += "xhr.send(null);";
+    html += "};";
+    html += "setInterval(getLeftValue, 1000);";
+
+    html += "var getRightValue = function () {";
+    html += "var xhr = new XMLHttpRequest();";
+    html += "xhr.onreadystatechange = function() {";
+    html += "if (this.readyState == 4 && this.status == 200) {";
+    html += "document.getElementById(\"right_value\").innerHTML = this.responseText;";
+    html += "}";
+    html += "};";
+    html += "xhr.open(\"GET\", \"/right_value\", true);";
+    html += "xhr.send(null);";
+    html += "};";
+    html += "setInterval(getRightValue, 1000);";
+
+    html += "var getLeftFrontValue = function () {";
+    html += "var xhr = new XMLHttpRequest();";
+    html += "xhr.onreadystatechange = function() {";
+    html += "if (this.readyState == 4 && this.status == 200) {";
+    html += "document.getElementById(\"left_front_value\").innerHTML = this.responseText;";
+    html += "}";
+    html += "};";
+    html += "xhr.open(\"GET\", \"/left_front_value\", true);";
+    html += "xhr.send(null);";
+    html += "};";
+    html += "setInterval(getLeftFrontValue, 1000);";
+
+    html += "var getRightFrontValue = function () {";
+    html += "var xhr = new XMLHttpRequest();";
+    html += "xhr.onreadystatechange = function() {";
+    html += "if (this.readyState == 4 && this.status == 200) {";
+    html += "document.getElementById(\"right_front_value\").innerHTML = this.responseText;";
+    html += "}";
+    html += "};";
+    html += "xhr.open(\"GET\", \"/right_front_value\", true);";
+    html += "xhr.send(null);";
+    html += "};";
+    html += "setInterval(getRightFrontValue, 1000);";
+
+    html += "</script>";
     html += "</html>";
     request->send(200, "text/html", html);
   });
 
+  server.on("/voltage", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(200, "text/plain", String(g_sensor.battery_value)+"mV");
+  });
+
+  server.on("/left_value", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(200, "text/plain", String(g_sensor.sen_l.value));
+  });
+
+  server.on("/right_value", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(200, "text/plain", String(g_sensor.sen_r.value));
+  });
+
+  server.on("/left_front_value", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(200, "text/plain", String(g_sensor.sen_fl.value));
+  });
+
+  server.on("/right_front_value", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(200, "text/plain", String(g_sensor.sen_fr.value));
+  });
+
+
   server.on("/get", HTTP_GET, [](AsyncWebServerRequest* request) {
     String inputMessage;
+
+    inputMessage = request->getParam("tire_dia")->value();
+    g_run.tire_diameter = inputMessage.toFloat();
+    inputMessage = request->getParam("tread_width")->value();
+    g_run.tread_width = inputMessage.toFloat();
+
+
     inputMessage = request->getParam("ref_left")->value();
     g_sensor.sen_l.ref = inputMessage.toInt();
     inputMessage = request->getParam("ref_right")->value();
@@ -144,6 +256,10 @@ void WebServerSetup(void) {
     inputMessage = request->getParam("goal_y")->value();
     g_map.goal_my = inputMessage.toInt();
 
+    Serial.println("saved");
+
+
+
     request->redirect("/");
   });
 
@@ -151,4 +267,7 @@ void WebServerSetup(void) {
   // ESP32_WebServer start
   server.begin();  //APモードを起動
   Serial.println("ESP32_WebServer start!");
+  while(1){
+    delay(10);
+  }
 }

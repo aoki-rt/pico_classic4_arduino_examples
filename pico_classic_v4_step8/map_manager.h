@@ -39,7 +39,7 @@ typedef struct
 {
   unsigned char x;
   unsigned char y;
-  t_direction_glob dir;
+  t_global_direction dir;
 } t_position;
 
 class MapManager
@@ -52,15 +52,15 @@ public:
   short goal_mx, goal_my;
 
   void axisUpdate(void);
-  void nextDir(t_direction dir);
-  t_direction nextDirGet(char x, char y, t_direction_glob * dir);
-  t_direction nextDir2Get(short x, short y, t_direction_glob * dir);
+  void nextDir(t_local_direction dir);
+  t_local_direction nextDirGet(char x, char y, t_global_direction * dir);
+  t_local_direction nextDir2Get(short x, short y, t_global_direction * dir);
   void positionInit(void);
-  void wallDataSet(unsigned char x, unsigned char y, t_direction_glob dir, char data);
-  char wallDataGet(unsigned char x, unsigned char y, t_direction_glob dir);
+  void wallDataSet(unsigned char x, unsigned char y, t_global_direction dir, char data);
+  char wallDataGet(unsigned char x, unsigned char y, t_global_direction dir);
   void wallSet(bool IS_SEN_FR, bool IS_SEN_R, bool IS_SEN_L);
 
-
+/*
   void setMyPosDir(t_direction_glob dir);
   short getMyPosX(void);
   short getMyPosY(void);
@@ -68,7 +68,7 @@ public:
   char getGoalY(void);
   void setGoalX(short data);
   void setGoalY(short data);
-
+*/
 
 private:
   unsigned short steps_map[MAZESIZE_X][MAZESIZE_Y];  //歩数マップ
@@ -76,7 +76,7 @@ private:
 
   void searchMapMake(int x, int y);
   void map2Make(int x, int y);
-  int priorityGet(unsigned char x, unsigned char y, t_direction_glob dir);
+  int priorityGet(unsigned char x, unsigned char y, t_global_direction dir);
 };
 
 extern MapManager g_map;

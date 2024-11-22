@@ -240,7 +240,7 @@ void RUN::decelerate(int len, float init_speed) {
 }
 
 
-void RUN::rotate(t_direction dir, int times) {
+void RUN::rotate(t_local_direction dir, int times) {
   int obj_step;
 
   controlInterruptStop();

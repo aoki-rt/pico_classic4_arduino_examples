@@ -51,14 +51,14 @@ void MapManager::positionInit(void)
   mypos.x = mypos.y = 0;
   mypos.dir = north;
 }
-
-void MapManager::setMyPosDir(t_direction_glob dir) { mypos.dir = dir; }
+/*
+void MapManager::setMyPosDir(t_global_direction dir) { mypos.dir = dir; }
 
 short MapManager::getMyPosX(void) { return mypos.x; }
 
 short MapManager::getMyPosY(void) { return mypos.y; }
-
-char MapManager::wallDataGet(unsigned char x, unsigned char y, t_direction_glob dir)
+*/
+char MapManager::wallDataGet(unsigned char x, unsigned char y, t_global_direction dir)
 {
   switch (dir) {
     case north:
@@ -77,7 +77,7 @@ char MapManager::wallDataGet(unsigned char x, unsigned char y, t_direction_glob 
   return 99;
 }
 
-void MapManager::wallDataSet(unsigned char x, unsigned char y, t_direction_glob dir, char data)
+void MapManager::wallDataSet(unsigned char x, unsigned char y, t_global_direction dir, char data)
 {
   switch (dir) {
     case north:
@@ -94,7 +94,7 @@ void MapManager::wallDataSet(unsigned char x, unsigned char y, t_direction_glob 
       break;
   }
 }
-
+/*
 char MapManager::getGoalX(void) { return goal_mx; }
 
 char MapManager::getGoalY(void) { return goal_my; }
@@ -102,7 +102,7 @@ char MapManager::getGoalY(void) { return goal_my; }
 void MapManager::setGoalX(short data) { goal_mx = data; }
 
 void MapManager::setGoalY(short data) { goal_my = data; }
-
+*/
 void MapManager::axisUpdate(void)
 {
   switch (mypos.dir) {
@@ -121,7 +121,7 @@ void MapManager::axisUpdate(void)
   }
 }
 
-void MapManager::nextDir(t_direction dir)
+void MapManager::nextDir(t_local_direction dir)
 {
   if (dir == right) {
     switch (mypos.dir) {
@@ -194,7 +194,7 @@ void MapManager::wallSet(bool IS_SEN_FR, bool IS_SEN_R, bool IS_SEN_L)  //壁情
   }
 }
 
-t_direction MapManager::nextDirGet(char x, char y, t_direction_glob * dir)
+t_local_direction MapManager::nextDirGet(char x, char y, t_global_direction * dir)
 {
   int little, priority, tmp_priority;
 
@@ -337,7 +337,7 @@ t_direction MapManager::nextDirGet(char x, char y, t_direction_glob * dir)
   return front;
 }
 
-t_direction MapManager::nextDir2Get(short x, short y, t_direction_glob * dir)
+t_local_direction MapManager::nextDir2Get(short x, short y, t_global_direction * dir)
 {
   int little, priority, tmp_priority;
 
@@ -593,7 +593,7 @@ void MapManager::map2Make(int x, int y)
   } while (change_flag == true);
 }
 
-int MapManager::priorityGet(unsigned char x, unsigned char y, t_direction_glob dir)
+int MapManager::priorityGet(unsigned char x, unsigned char y, t_global_direction dir)
 {
   int priority;
 

@@ -75,7 +75,7 @@ public:
   void accelerate(int len, int finish_speed);
   void oneStep(int len, int init_speed);
   void decelerate(int len, float init_speed);
-  void rotate(t_direction dir, int times);  
+  void rotate(t_local_direction dir, int times);  
 
 private:
   int step_lr_len,step_lr;
