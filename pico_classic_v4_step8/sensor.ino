@@ -89,6 +89,11 @@ void SENSOR::interrupt(void)
       } else {
         bledSet(2);
       }
+      if(battery_value < BATT_MIN){
+        buzzerEnable(400);
+//        motorDisable();
+        ledSet(0);
+      }
       break;
     default:
       Serial.printf("sensor state error\n\r");
