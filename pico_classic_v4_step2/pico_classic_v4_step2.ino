@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,14 +46,14 @@ void loop()
     continue;
   }
   if (digitalRead(SW_R) == 0) {
-    digitalWrite(LED3, (++g_state_r) & 0x01);
+    digitalWrite(LED0, (++g_state_r) & 0x01);
   }
   if (digitalRead(SW_C) == 0) {
-    digitalWrite(LED2, (++g_state_c) & 0x01);
-    digitalWrite(LED1, (g_state_c)&0x01);
+    digitalWrite(LED1, (++g_state_c) & 0x01);
+    digitalWrite(LED2, (g_state_c)&0x01);
   }
   if (digitalRead(SW_L) == 0) {
-    digitalWrite(LED0, (++g_state_l) & 0x01);
+    digitalWrite(LED3, (++g_state_l) & 0x01);
   }
   delay(30);
   while (!(digitalRead(SW_L) && digitalRead(SW_C) && digitalRead(SW_R))) {

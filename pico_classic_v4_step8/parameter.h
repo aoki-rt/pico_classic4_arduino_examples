@@ -18,7 +18,7 @@
 
 #define WAITLOOP_SLED 300
 
-#define CON_WALL_KP 0.3
+#define CON_WALL_KP_INIT 0.3
 #define SEARCH_ACCEL 1.5
 #define TURN_ACCEL 0.3
 

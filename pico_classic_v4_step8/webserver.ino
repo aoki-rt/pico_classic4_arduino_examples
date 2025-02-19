@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#define AP_MODE
 
 AsyncWebServer server(80);
 
@@ -19,13 +20,13 @@ AsyncWebServer server(80);
 const char* ssid = "PICO4";
 const char* password = "12345678";
 #else
-const char* ssid = "xxx";
-const char* password = "yyyyyy";
+const char* ssid = "使用しているルータのSSID";
+const char* password = "ルータのパスワード";
 #endif
 
 
 
-void WebServerSetup(void * pvParameters) {
+void webServerSetup(void) {
 
 #ifdef AP_MODE
   WiFi.softAP(ssid, password);
@@ -116,6 +117,14 @@ void WebServerSetup(void * pvParameters) {
     html += "<br>";
 
     html += "<p><h2>Sensor Paramter</h2></p>";
+
+    html += "<table align=\"center\">";
+    html += "<tr><th>Gain</th><td><input name=\"wall_kp\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.con_wall.kp);
+    html += "></td></tr>";
+    html += "</table>";
+    html += "<br>";
+
     html += "<table align=\"center\">";
     html += "<tr><th></th><th>Left</th><th>Right</th></tr>";
     html += "<tr><th>SIDE REF</th><th><input name=\"ref_left\" type=\"text\" size=\"10\" value=";
@@ -235,6 +244,8 @@ void WebServerSetup(void * pvParameters) {
     inputMessage = request->getParam("tread_width")->value();
     g_run.tread_width = inputMessage.toFloat();
 
+    inputMessage = request->getParam("wall_kp")->value();
+    g_run.con_wall.kp = inputMessage.toFloat();
 
     inputMessage = request->getParam("ref_left")->value();
     g_sensor.sen_l.ref = inputMessage.toInt();
@@ -257,17 +268,15 @@ void WebServerSetup(void * pvParameters) {
     g_map.goal_my = inputMessage.toInt();
 
     Serial.println("saved");
+    paramWrite();
 
-
-
+    buzzerEnable(INC_FREQ);
+    delay(30);
+    buzzerDisable();
     request->redirect("/");
   });
-
 
   // ESP32_WebServer start
   server.begin();  //APモードを起動
   Serial.println("ESP32_WebServer start!");
-  while(1){
-    delay(10);
-  }
 }

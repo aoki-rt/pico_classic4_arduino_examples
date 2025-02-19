@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ RUN::RUN() {
   // TODO Auto-generated constructor stub
   speed = 0.0;
   accel = 0.0;
-  con_wall.kp = CON_WALL_KP;
 }
 
 RUN::~RUN() {

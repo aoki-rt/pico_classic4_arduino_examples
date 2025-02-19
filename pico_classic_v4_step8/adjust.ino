@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "adjust.h"
-
-TaskHandle_t webserverHandle;
 
 ADJUST g_adjust;
 
@@ -176,16 +173,19 @@ unsigned char ADJUST::modeExec(unsigned char l_mode) {
   motorDisable();
   switch (l_mode) {
     case 1:
-      xTaskCreateUniversal(
-         WebServerSetup, "webserverTask", 4096,
-        NULL, 0, &webserverHandle,
-        CONFIG_ARDUINO_RUNNING_CORE);
-
+      buzzerEnable(INC_FREQ);
+      delay(30);
+      buzzerDisable();
+      delay(500);
+      buzzerEnable(INC_FREQ);
+      delay(30);
+      buzzerDisable();
+      webServerSetup();
+//      viewAdc();
       break;
     case 2:
       straightCheck(9);
       break;
-
     case 3:
       rotationCheck();
       break;
@@ -193,15 +193,11 @@ unsigned char ADJUST::modeExec(unsigned char l_mode) {
       mapCopy();
       mapView();
       break;
-
     case 5:
       break;
-
     case 6:
       break;
-
     default:
-      vTaskDelete(webserverHandle);
       return 1;
       break;
   }

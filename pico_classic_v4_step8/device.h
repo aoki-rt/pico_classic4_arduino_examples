@@ -5,7 +5,6 @@
 #define SW_CM 2
 #define SW_RM 4
 
-//Pi:co4
 #define LED0 13
 #define LED1 14
 #define LED2 47
@@ -35,9 +34,9 @@
 
 #define SPI_CLK  39
 #define SPI_MOSI 42
-#define SPI_CS_L   40 //左モータ
-#define SPI_CS_R   3 //右モータ
-#define SPI_CS_J  46 //ジャイロ
+#define SPI_CS_L 40 //左モータ
+#define SPI_CS_R  3 //右モータ
+#define SPI_CS_J 46 //ジャイロ
 #define SPI_MISO 41
 
 #endif  // DEVICE_H_

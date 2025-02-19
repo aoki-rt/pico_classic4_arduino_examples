@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,13 +51,7 @@ void MapManager::positionInit(void)
   mypos.x = mypos.y = 0;
   mypos.dir = north;
 }
-/*
-void MapManager::setMyPosDir(t_global_direction dir) { mypos.dir = dir; }
 
-short MapManager::getMyPosX(void) { return mypos.x; }
-
-short MapManager::getMyPosY(void) { return mypos.y; }
-*/
 char MapManager::wallDataGet(unsigned char x, unsigned char y, t_global_direction dir)
 {
   switch (dir) {
@@ -94,15 +88,7 @@ void MapManager::wallDataSet(unsigned char x, unsigned char y, t_global_directio
       break;
   }
 }
-/*
-char MapManager::getGoalX(void) { return goal_mx; }
 
-char MapManager::getGoalY(void) { return goal_my; }
-
-void MapManager::setGoalX(short data) { goal_mx = data; }
-
-void MapManager::setGoalY(short data) { goal_my = data; }
-*/
 void MapManager::axisUpdate(void)
 {
   switch (mypos.dir) {

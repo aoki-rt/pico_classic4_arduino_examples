@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,15 +60,6 @@ public:
   char wallDataGet(unsigned char x, unsigned char y, t_global_direction dir);
   void wallSet(bool IS_SEN_FR, bool IS_SEN_R, bool IS_SEN_L);
 
-/*
-  void setMyPosDir(t_direction_glob dir);
-  short getMyPosX(void);
-  short getMyPosY(void);
-  char getGoalX(void);
-  char getGoalY(void);
-  void setGoalX(short data);
-  void setGoalY(short data);
-*/
 
 private:
   unsigned short steps_map[MAZESIZE_X][MAZESIZE_Y];  //歩数マップ
