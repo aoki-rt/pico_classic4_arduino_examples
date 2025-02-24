@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -132,6 +132,6 @@ void TMC5240::init(void) {
   g_tmc5240.write(TMC5240_GCONF, 0x00000000, 0x00000010);       //右のみシャフトインバース
   g_tmc5240.write(TMC5240_AMAX, 0x3ffff, 0x3ffff);              //加速度max 17..0 18bit
   g_tmc5240.write(TMC5240_XACTUAL, 0, 0);                       //初期化
-  g_tmc5240.write(TMC5240_VSTART, 0, 0);
+  g_tmc5240.write(TMC5240_VSTART, (unsigned int)(MIN_SPEED / TMC5240_VELOCITY), (unsigned int)(MIN_SPEED / TMC5240_VELOCITY));  
   g_tmc5240.write(TMC5240_VMAX, 0, 0);
 }

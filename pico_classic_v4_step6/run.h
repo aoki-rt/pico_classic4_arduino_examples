@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,11 +18,6 @@
 typedef enum { front, right, left, rear } t_local_direction;
 
 typedef enum {
-  e_counter_clear,
-  e_counter_notClear
-} t_count_flag;
-
-typedef enum {
   MOT_FORWARD = 1,  //TMC5240の方向に合わせた数字
   MOT_BACK = 2
 } t_CW_CCW;
@@ -40,8 +35,9 @@ public:
   RUN();
   virtual ~RUN();
   void interrupt(void);
+  void counterClear(void);
+  void dirSet(t_CW_CCW dir_left, t_CW_CCW dir_right);
   void speedSet(double l_speed, double r_speed);
-  void dirSpeedSet(t_CW_CCW dir_left, t_CW_CCW dir_right, float l_init_speed, t_count_flag count_reset);
   void stepGet(void);
   void stop(void);
   void accelerate(int len, int finish_speed);
