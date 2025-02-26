@@ -83,7 +83,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   while (digitalRead(SW_L) & digitalRead(SW_C) & digitalRead(SW_R)) {
-    delay(1);
     continue;
   }
   digitalWrite(MOTOR_EN, LOW);
