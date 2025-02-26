@@ -75,26 +75,35 @@ void RUN::interrupt(void) {  //割り込み内からコール
 }
 
 
-void RUN::stepGet(void) {
-  step_lr = g_tmc5240.readXactual();
-  step_lr_len = (int)((float)step_lr / 2.0 * TMC5240_PULSE);
+void RUN::dirSet(t_CW_CCW dir_left, t_CW_CCW dir_right) {
+  g_tmc5240.write(TMC5240_RAMPMODE, dir_left, dir_right);
+}
+
+void RUN::counterClear(void) {
+  g_tmc5240.write(TMC5240_XACTUAL, 0, 0);
 }
 
 void RUN::speedSet(double l_speed, double r_speed) {
-  g_tmc5240.write(TMC5240_VMAX, (unsigned int)(l_speed / TMC5240_VELOCITY), (unsigned int)(r_speed / TMC5240_VELOCITY));
+  g_tmc5240.write(TMC5240_VMAX, (unsigned int)(l_speed / (pulse * 0.787)), (unsigned int)(r_speed / (pulse * 0.787)));
 }
 
-void RUN::dirSpeedSet(t_CW_CCW dir_left, t_CW_CCW dir_right, float l_init_speed, t_count_flag count_reset) {
-  if (count_reset == e_counter_clear) {
-    g_tmc5240.write(TMC5240_XACTUAL, 0, 0);  //初期化
-  }
-  g_tmc5240.write(TMC5240_VMAX, (unsigned int)(l_init_speed / TMC5240_VELOCITY), (unsigned int)(l_init_speed / TMC5240_VELOCITY));
-  g_tmc5240.write(TMC5240_VSTART, (unsigned int)(MIN_SPEED / TMC5240_VELOCITY), (unsigned int)(MIN_SPEED / TMC5240_VELOCITY));
-  g_tmc5240.write(TMC5240_RAMPMODE, dir_left, dir_right);  //velocity mode(positive)
+void RUN::stay(float l_speed) {
+  controlInterruptStop();
+  max_speed = min_speed_accelerate = min_speed_decelerate = speed = l_speed;
+  accel = 0.0;
+  counterClear();
+  speedSet(l_speed, l_speed);
+  controlInterruptStart();
+}
+
+void RUN::stepGet(void) {
+  step_lr = g_tmc5240.readXactual();
+  step_lr_len = (int)((float)step_lr / 2.0 * pulse);
 }
 
 void RUN::stop(void) {
   g_tmc5240.write(TMC5240_VMAX, 0, 0);
+  delay(300);
 }
 
 
@@ -120,7 +129,9 @@ void RUN::straight(int len, int init_speed, int max_sp, int finish_speed) {
   }
 
   con_wall.enable = true;
-  dirSpeedSet(MOT_FORWARD, MOT_FORWARD, min_speed, e_counter_clear);
+  counterClear();
+  speedSet(init_speed,init_speed);
+  dirSet(MOT_FORWARD, MOT_FORWARD);
   obj_step = (int)((float)len * 2.0 / TMC5240_PULSE);
   controlInterruptStart();
 
@@ -144,12 +155,8 @@ void RUN::straight(int len, int init_speed, int max_sp, int finish_speed) {
   }
 
   if (finish_speed == SEARCH_SPEED) {
-    controlInterruptStop();
-    max_speed = min_speed = speed = finish_speed;
-    accel = 0.0;
-    dirSpeedSet(MOT_FORWARD, MOT_FORWARD, finish_speed, e_counter_clear);
-    controlInterruptStart();
-  } else {
+    stay(finish_speed);
+   } else {
     stop();
   }
 }
