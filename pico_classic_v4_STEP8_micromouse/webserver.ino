@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#define AP_MODE
+//#define AP_MODE
 
 AsyncWebServer server(80);
 
@@ -20,8 +20,10 @@ AsyncWebServer server(80);
 const char* ssid = "PICO4";
 const char* password = "12345678";
 #else
-const char* ssid = "使用しているルータのSSID";
-const char* password = "ルータのパスワード";
+//const char* ssid = "使用しているルータのSSID";
+//const char* password = "ルータのパスワード";
+const char* ssid = "JCOM_HOSI";
+const char* password = "890927221266";
 #endif
 
 
@@ -92,35 +94,11 @@ void webServerSetup(void) {
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>Tire Paramter</h2></p>";
-    html += "<table align=\"center\">";
-    html += "<tr><th>TIRE_DIAMETER</th><td><input name=\"tire_dia\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tire_diameter);
-    html += ">mm</td></tr>";
-    html += "<tr><th>TREAD_WIDTH</th><td><input name=\"tread_width\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tread_width);
-    html += ">mm</td></tr>";
-    html += "</table>";
-    html += "<br>";
-    html += "<br>";
-
-    html += "<p><h2>GOAL Paramter</h2></p>";
-    html += "<table align=\"center\">";
-    html += "<tr><th></th><th>X</th><th>Y</th></tr>";
-    html += "<tr><th>AXIS</th><td><input name=\"goal_x\" type=\"text\" size=\"10\" value=";
-    html += String(g_map.goal_mx);
-    html += "></td><td><input name=\"goal_y\" type=\"text\" size=\"10\" value=";
-    html += String(g_map.goal_my);
-    html += "></td></tr>";
-    html += "</table>";
-    html += "<br>";
-    html += "<br>";
-
     html += "<p><h2>Sensor Paramter</h2></p>";
 
     html += "<table align=\"center\">";
     html += "<tr><th>Gain</th><td><input name=\"wall_kp\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.con_wall.kp);
+    html += String(g_run.con_wall.kp,3);
     html += "></td></tr>";
     html += "</table>";
     html += "<br>";
@@ -145,6 +123,56 @@ void webServerSetup(void) {
     html += "</table>";
     html += "<br>";
     html += "<br>";
+
+    html += "<p><h2>Tire Paramter</h2></p>";
+    html += "<table align=\"center\">";
+    html += "<tr><th>TIRE_DIAMETER</th><td><input name=\"tire_dia\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.tire_diameter,3);
+    html += ">mm</td></tr>";
+    html += "<tr><th>TREAD_WIDTH</th><td><input name=\"tread_width\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.tread_width,3);
+    html += ">mm</td></tr>";
+    html += "</table>";
+    html += "<br>";
+    html += "<br>";
+
+    html += "<p><h2>GOAL Paramter</h2></p>";
+    html += "<table align=\"center\">";
+    html += "<tr><th></th><th>X</th><th>Y</th></tr>";
+    html += "<tr><th>AXIS</th><td><input name=\"goal_x\" type=\"text\" size=\"10\" value=";
+    html += String(g_map.goal_mx);
+    html += "></td><td><input name=\"goal_y\" type=\"text\" size=\"10\" value=";
+    html += String(g_map.goal_my);
+    html += "></td></tr>";
+    html += "</table>";
+    html += "<br>";
+    html += "<br>";
+
+    html += "<p><h2>Accel Paramter</h2></p>";
+    html += "<table align=\"center\">";
+    html += "<tr><th>Search accel</th><td><input name=\"search_acc\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.search_accel,3);
+    html += ">mm</td></tr>";
+    html += "<tr><th>Turn accel</th><td><input name=\"turn_acc\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.turn_accel,3);
+    html += ">mm</td></tr>";
+    html += "</table>";
+    html += "<br>";
+    html += "<br>";
+
+    html += "<p><h2>Speed Paramter</h2></p>";
+    html += "<table align=\"center\">";
+    html += "<tr><th>Search speed</th><td><input name=\"search_spd\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.search_speed);
+    html += ">mm</td></tr>";
+    html += "<tr><th>max speed</th><td><input name=\"max_spd\" type=\"text\" size=\"10\" value=";
+    html += String(g_run.max_speed);
+    html += ">mm</td></tr>";
+    html += "</table>";
+    html += "<br>";
+    html += "<br>";
+
+
     html += "<input type=\"submit\" value=\"Save\">";
     html += "</form><br>";
     html += "</body>";
@@ -266,6 +294,17 @@ void webServerSetup(void) {
     g_map.goal_mx = inputMessage.toInt();
     inputMessage = request->getParam("goal_y")->value();
     g_map.goal_my = inputMessage.toInt();
+
+    inputMessage = request->getParam("search_acc")->value();
+    g_run.search_accel = inputMessage.toFloat();
+    inputMessage = request->getParam("turn_acc")->value();
+    g_run.turn_accel = inputMessage.toFloat();
+
+    inputMessage = request->getParam("search_spd")->value();
+    g_run.search_speed = inputMessage.toInt();
+    inputMessage = request->getParam("max_spd")->value();
+    g_run.max_speed = inputMessage.toInt();
+
 
     Serial.println("saved");
     paramWrite();

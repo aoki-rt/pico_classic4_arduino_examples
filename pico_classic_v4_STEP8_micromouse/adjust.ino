@@ -117,11 +117,11 @@ void ADJUST::adcView(void) {
 void ADJUST::straightCheck(int section_check) {
   motorEnable();
   delay(1000);
-  g_run.accelerate(HALF_SECTION, SEARCH_SPEED);
+  g_run.accelerate(HALF_SECTION, g_run.search_speed);
   if (section_check > 1) {
-    g_run.straight(SECTION * (section_check - 1), SEARCH_SPEED, MAX_SPEED, SEARCH_SPEED);
+    g_run.straight(SECTION * (section_check - 1), g_run.search_speed, g_run.max_speed, g_run.search_speed);
   }
-  g_run.decelerate(HALF_SECTION, SEARCH_SPEED);
+  g_run.decelerate(HALF_SECTION, g_run.search_speed);
 
   motorDisable();
 }
@@ -181,7 +181,7 @@ unsigned char ADJUST::modeExec(unsigned char l_mode) {
       delay(30);
       buzzerDisable();
       webServerSetup();
-//      viewAdc();
+      //      viewAdc();
       break;
     case 2:
       straightCheck(9);

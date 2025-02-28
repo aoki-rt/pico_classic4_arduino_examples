@@ -38,15 +38,14 @@ void controlInterrupt(void) {
 }
 
 void RUN::interrupt(void) {  //割り込み内からコール
-  double spd_r, spd_l;
 
   speed += accel;
 
-  if (speed > max_speed) {
-    speed = max_speed;
+  if (speed > upper_speed_limit) {
+    speed = upper_speed_limit;
   }
-  if (speed < min_speed) {
-    speed = min_speed;
+  if (speed < lower_speed_limit) {
+    speed = lower_speed_limit;
   }
 
   if (con_wall.enable == true) {
@@ -89,7 +88,7 @@ void RUN::speedSet(double l_speed, double r_speed) {
 
 void RUN::stay(float l_speed) {
   controlInterruptStop();
-  max_speed = min_speed_accelerate = min_speed_decelerate = speed = l_speed;
+  upper_speed_limit = lower_speed_limit = speed = (double)l_speed;
   accel = 0.0;
   counterClear();
   speedSet(l_speed, l_speed);
@@ -111,40 +110,34 @@ void RUN::straight(int len, int init_speed, int max_sp, int finish_speed) {
   int obj_step;
 
   controlInterruptStop();
-  max_speed = max_sp;
-  accel = SEARCH_ACCEL;
+  upper_speed_limit = (double)max_sp;
+  accel = (double)search_accel;
 
   if (init_speed < MIN_SPEED) {
-    speed = MIN_SPEED;
+    speed = (double)MIN_SPEED;
   } else {
-    speed = init_speed;
+    speed = (double)init_speed;
   }
   if (finish_speed < MIN_SPEED) {
     finish_speed = MIN_SPEED;
   }
-  if (init_speed < finish_speed) {
-    min_speed = MIN_SPEED;
-  } else {
-    min_speed = finish_speed;
-  }
+  lower_speed_limit = (double)finish_speed;
 
   con_wall.enable = true;
-  counterClear();
-  speedSet(init_speed,init_speed);
+  speedSet(init_speed, init_speed);
   dirSet(MOT_FORWARD, MOT_FORWARD);
-  obj_step = (int)((float)len * 2.0 / TMC5240_PULSE);
+  obj_step = (int)((float)len * 2.0 / pulse);
   controlInterruptStart();
 
   while (1) {
     stepGet();
     speedSet(speed_target_l, speed_target_r);
-    if ((int)(len - step_lr_len) < (int)(((speed * speed) - (MIN_SPEED * MIN_SPEED)) / (2.0 * 1000.0 * accel))) {
+    if ((int)(len - step_lr_len) < (int)(((speed * speed) - (lower_speed_limit * lower_speed_limit)) / (2.0 * 1000.0 * accel))) {
       break;
     }
   }
 
-  accel = -1.0 * SEARCH_ACCEL;
-  min_speed = MIN_SPEED;
+  accel = -1.0 * search_accel;
 
   while (1) {
     stepGet();
@@ -154,10 +147,10 @@ void RUN::straight(int len, int init_speed, int max_sp, int finish_speed) {
     }
   }
 
-  if (finish_speed == SEARCH_SPEED) {
-    stay(finish_speed);
-   } else {
+  if (finish_speed == MIN_SPEED) {
     stop();
+  } else {
+    stay(finish_speed);
   }
 }
 
@@ -165,12 +158,14 @@ void RUN::accelerate(int len, int finish_speed) {
   int obj_step;
 
   controlInterruptStop();
-  accel = SEARCH_ACCEL;
-  speed = min_speed = MIN_SPEED;
-  max_speed = finish_speed;
+  accel = search_accel;
+  speed = lower_speed_limit = (double)MIN_SPEED;
+  upper_speed_limit = (double)finish_speed;
   con_wall.enable = true;
-  dirSpeedSet(MOT_FORWARD, MOT_FORWARD, MIN_SPEED, e_counter_clear);
-  obj_step = (int)((float)len * 2.0 / TMC5240_PULSE);
+  dirSet(MOT_FORWARD, MOT_FORWARD);
+  speedSet(speed, speed);
+  counterClear();
+  obj_step = (int)((float)len * 2.0 / pulse);
   controlInterruptStart();
 
   while (1) {
@@ -180,22 +175,19 @@ void RUN::accelerate(int len, int finish_speed) {
       break;
     }
   }
-  controlInterruptStop();
-  max_speed = min_speed = speed = finish_speed;
-  accel = 0.0;
-  dirSpeedSet(MOT_FORWARD, MOT_FORWARD, finish_speed, e_counter_clear);
-  controlInterruptStart();
+
+  stay(finish_speed);
 }
 void RUN::oneStep(int len, int init_speed) {
   int obj_step;
 
   controlInterruptStop();
   accel = 0.0;
-  max_speed = init_speed;
-  speed = min_speed = init_speed;
+  speed = lower_speed_limit = upper_speed_limit = (double)init_speed;
   con_wall.enable = true;
-  dirSpeedSet(MOT_FORWARD, MOT_FORWARD, speed, e_counter_notClear);
-  obj_step = (int)((float)len * 2.0 / TMC5240_PULSE);
+  dirSet(MOT_FORWARD, MOT_FORWARD);
+  speedSet(speed, speed);
+  obj_step = (int)((float)len * 2.0 / pulse);
   controlInterruptStart();
 
   while (1) {
@@ -205,22 +197,21 @@ void RUN::oneStep(int len, int init_speed) {
       break;
     }
   }
-  controlInterruptStop();
-  max_speed = min_speed = speed = init_speed;
-  accel = 0.0;
-  controlInterruptStart();
+
+  stay(init_speed);
 }
 
 void RUN::decelerate(int len, float init_speed) {
   int obj_step;
 
   controlInterruptStop();
-  accel = SEARCH_ACCEL;
-  max_speed = init_speed;
-  speed = min_speed = init_speed;
+  accel = search_accel;
+  speed = upper_speed_limit = init_speed;
+  lower_speed_limit = MIN_SPEED;
   con_wall.enable = true;
-  dirSpeedSet(MOT_FORWARD, MOT_FORWARD, speed, e_counter_notClear);
-  obj_step = (int)((float)len * 2.0 / TMC5240_PULSE);
+  dirSet(MOT_FORWARD, MOT_FORWARD);
+  speedSet(speed, speed);
+  obj_step = (int)((float)len * 2.0 / pulse);
   controlInterruptStart();
 
   while (1) {
@@ -231,8 +222,7 @@ void RUN::decelerate(int len, float init_speed) {
     }
   }
 
-  accel = -1*SEARCH_ACCEL;
-  min_speed = MIN_SPEED;
+  accel = -1 * search_accel;
 
   while (1) {
     stepGet();
@@ -250,33 +240,35 @@ void RUN::rotate(t_local_direction dir, int times) {
   int obj_step;
 
   controlInterruptStop();
-  accel = TURN_ACCEL;
-  max_speed = SEARCH_SPEED;
-  speed = min_speed = MIN_SPEED;
+  accel = turn_accel;
+  upper_speed_limit = search_speed;
+  speed = lower_speed_limit = MIN_SPEED;
   con_wall.enable = false;
-  obj_step = (int)(TREAD_CIRCUIT * (float)times * 2.0 / TMC5240_PULSE);
+  obj_step = (int)(tread_width * PI / 4.0 * (float)times * 2.0 / pulse);
   switch (dir) {
     case right:
-      dirSpeedSet(MOT_FORWARD, MOT_BACK, min_speed, e_counter_clear);
+      dirSet(MOT_FORWARD, MOT_BACK);
       break;
     case left:
-      dirSpeedSet(MOT_BACK, MOT_FORWARD, min_speed, e_counter_clear);
+      dirSet(MOT_BACK, MOT_FORWARD);
       break;
     default:
-      dirSpeedSet(MOT_FORWARD, MOT_FORWARD, min_speed, e_counter_clear);
+      dirSet(MOT_FORWARD, MOT_FORWARD);
       break;
   }
+  speedSet(MIN_SPEED, MIN_SPEED);
+  counterClear();
   controlInterruptStart();
 
   while (1) {
     stepGet();
     speedSet(speed_target_l, speed_target_r);
-    if ((int)((TREAD_CIRCUIT * times) - step_lr_len) < (int)(((speed * speed) - (MIN_SPEED * MIN_SPEED)) / (2.0 * 1000.0 * accel))) {
+    if ((int)((tread_width * PI / 4.0 * times) - step_lr_len) < (int)(((speed * speed) - (MIN_SPEED * MIN_SPEED)) / (2.0 * 1000.0 * accel))) {
       break;
     }
-  }  
+  }
 
-  accel = -1.0 * TURN_ACCEL;
+  accel = -1.0 * turn_accel;
 
   while (1) {
     stepGet();
@@ -284,7 +276,6 @@ void RUN::rotate(t_local_direction dir, int times) {
     if (step_lr > obj_step) {
       break;
     }
-  } 
+  }
   stop();
-  delay(100);
 }

@@ -15,14 +15,14 @@
 
 #ifndef SRC_RUN_H_
 #define SRC_RUN_H_
-
+/*
 #define microstep 16
 #define TMC5240_PULSE (tire_diameter * PI / (200.0 * microstep))
 //#define TMC5240_VELOCITY (TMC5240_PULSE*0.739)//12400000/2/2^23=0.739 -50c
 #define TMC5240_VELOCITY (TMC5240_PULSE * 0.787)  //13200000/2/2^23=0.787 +50c
 
 #define TREAD_CIRCUIT (tread_width * PI / 4)
-
+*/
 
 typedef struct
 {
@@ -40,11 +40,6 @@ typedef struct
 } t_control;
 
 typedef enum {
-  e_counter_clear,
-  e_counter_notClear
-} t_count_flag;
-
-typedef enum {
   MOT_FORWARD = 1,  //TMC5240の方向に合わせた数字
   MOT_BACK = 2
 } t_CW_CCW;
@@ -57,20 +52,22 @@ public:
   volatile double speed;
   volatile double speed_target_r;
   volatile double speed_target_l;  
-  volatile double max_speed;
-  volatile double min_speed;
+  volatile double upper_speed_limit;
+  volatile double lower_speed_limit;
+  float search_accel;
+  short search_speed;
+  short max_speed;
+  float turn_accel;
   t_control con_wall;  
 
   float tire_diameter;
   float tread_width;
+  float pulse;
 
   RUN();
   virtual ~RUN();
   void interrupt(void);
-  void speedSet(double l_speed, double r_speed);
-  void dirSpeedSet(t_CW_CCW dir_left, t_CW_CCW dir_right, float l_init_speed, t_count_flag count_reset);
-  void stepGet(void);
-  void stop(void);
+  void counterClear(void);
   void straight(int len, int init_speed, int max_sp, int finish_speed);  
   void accelerate(int len, int finish_speed);
   void oneStep(int len, int init_speed);
@@ -79,6 +76,11 @@ public:
 
 private:
   int step_lr_len,step_lr;
+  void dirSet(t_CW_CCW dir_left, t_CW_CCW dir_right);
+  void speedSet(double l_speed, double r_speed);
+  void stepGet(void);
+  void stay(float l_speed);  
+  void stop(void);  
 };
 
 

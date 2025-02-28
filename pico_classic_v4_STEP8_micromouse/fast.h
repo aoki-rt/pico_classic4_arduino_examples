@@ -20,9 +20,8 @@ public:
   FAST();
   virtual ~FAST();
 
-void run(short gx, short gy);
+  void run(short gx, short gy);
 private:
-
 };
 
 extern FAST g_fast;

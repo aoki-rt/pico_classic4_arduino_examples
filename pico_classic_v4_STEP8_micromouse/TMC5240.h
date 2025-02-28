@@ -1,4 +1,4 @@
-// Copyright 2024 RT Corporation
+// Copyright 2025 RT Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 
 #ifndef TMC5240_H_
 #define TMC5240_H_
+
+#define microstep 16
 
 #define TMC5240_READ 0x00
 #define TMC5240_WRITE 0x80
@@ -99,6 +101,7 @@
 #define TMC5240_SG4_THRS 0x74
 #define TMC5240_SG4_RESULT 0x75
 #define TMC5240_SG4_IND 0x76
+
 
 class TMC5240 {
 private:

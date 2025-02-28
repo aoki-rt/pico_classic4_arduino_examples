@@ -42,7 +42,17 @@ void flashInit(void) {
   appendFile(SPIFFS, file_tmp, cmd_tmp);
   cmd_tmp = "con_kp " + String(CON_WALL_KP_INIT) + '\n';
   appendFile(SPIFFS, file_tmp, cmd_tmp);
+
+  cmd_tmp = "search_accel " + String(SEARCH_ACCEL_INIT) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "turn_accel " + String(TURN_ACCEL_INIT) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "search_speed " + String(SEARCH_SPEED_INIT) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "max_speed " + String(MAX_SPEED_INIT) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
 }
+
 
 void flashBegin(void) {
 
@@ -170,6 +180,16 @@ void paramWrite(void) {
   cmd_tmp = "con_kp " + String(g_run.con_wall.kp) + '\n';
   appendFile(SPIFFS, file_tmp, cmd_tmp);
 
+  cmd_tmp = "search_accel " + String(g_run.search_accel) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "turn_accel " + String(g_run.turn_accel) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "search_speed " + String(g_run.search_speed) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+  cmd_tmp = "max_speed " + String(g_run.max_speed) + '\n';
+  appendFile(SPIFFS, file_tmp, cmd_tmp);
+
+
   controlInterruptStart();
   sensorInterruptStart();
 }
@@ -222,7 +242,17 @@ void paramRead(void) {
     } else if (cmds[0].equals("tread_w")) {
       g_run.tread_width = cmds[1].toFloat();
     } else if (cmds[0].equals("con_kp")) {
-      g_run.con_wall.kp = cmds[1].toFloat();      
+      g_run.con_wall.kp = cmds[1].toFloat();
+
+    } else if (cmds[0].equals("search_accel")) {
+      g_run.search_accel = cmds[1].toFloat();
+    } else if (cmds[0].equals("turn_accel")) {
+      g_run.turn_accel = cmds[1].toFloat();
+    } else if (cmds[0].equals("search_speed")) {
+      g_run.search_speed = cmds[1].toInt();
+    } else if (cmds[0].equals("max_speed")) {
+      g_run.max_speed = cmds[1].toInt();
+
     } else {
       Serial.print("parameter cmds Error ");
       Serial.println(cmds[0]);

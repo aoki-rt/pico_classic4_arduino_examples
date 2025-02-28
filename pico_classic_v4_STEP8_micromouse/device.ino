@@ -13,22 +13,20 @@
 // limitations under the License.
 
 
-hw_timer_t * g_timer0 = NULL;
-hw_timer_t * g_timer1 = NULL;
+hw_timer_t* g_timer0 = NULL;
+hw_timer_t* g_timer1 = NULL;
 
 
 portMUX_TYPE g_timer_mux = portMUX_INITIALIZER_UNLOCKED;
 
 
-void IRAM_ATTR onTimer0(void)
-{
+void IRAM_ATTR onTimer0(void) {
   portENTER_CRITICAL_ISR(&g_timer_mux);
   controlInterrupt();
   portEXIT_CRITICAL_ISR(&g_timer_mux);
 }
 
-void IRAM_ATTR onTimer1(void)
-{
+void IRAM_ATTR onTimer1(void) {
   portENTER_CRITICAL_ISR(&g_timer_mux);
   sensorInterrupt();
   portEXIT_CRITICAL_ISR(&g_timer_mux);
@@ -36,14 +34,21 @@ void IRAM_ATTR onTimer1(void)
 
 
 
-void controlInterruptStart(void) { timerStart(g_timer0); }
-void controlInterruptStop(void) { timerStop(g_timer0); }
+void controlInterruptStart(void) {
+  timerStart(g_timer0);
+}
+void controlInterruptStop(void) {
+  timerStop(g_timer0);
+}
 
-void sensorInterruptStart(void) { timerStart(g_timer1); }
-void sensorInterruptStop(void) { timerStop(g_timer1); }
+void sensorInterruptStart(void) {
+  timerStart(g_timer1);
+}
+void sensorInterruptStop(void) {
+  timerStop(g_timer1);
+}
 
-void deviceInit(void)
-{
+void deviceInit(void) {
   pinMode(LED0, OUTPUT);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
@@ -83,22 +88,17 @@ void deviceInit(void)
   timerStart(g_timer1);
 
   Serial.begin(115200);
-
-
-
 }
 
 //LED
-void ledSet(unsigned char data)
-{
+void ledSet(unsigned char data) {
   digitalWrite(LED0, data & 0x01);
   digitalWrite(LED1, (data >> 1) & 0x01);
   digitalWrite(LED2, (data >> 2) & 0x01);
   digitalWrite(LED3, (data >> 3) & 0x01);
 }
 
-void bledSet(char data)
-{
+void bledSet(char data) {
   if (data & 0x01) {
     digitalWrite(BLED0, HIGH);
   } else {
@@ -112,26 +112,24 @@ void bledSet(char data)
 }
 
 //Buzzer
-void buzzerEnable(short f) { ledcWriteTone(BUZZER, f); }
+void buzzerEnable(short f) {
+  ledcWriteTone(BUZZER, f);
+}
 
-void buzzerDisable(void)
-{
+void buzzerDisable(void) {
   ledcWrite(BUZZER, 1024);  //duty 100% Buzzer OFF
 }
 
 //motor
-void motorEnable(void)
-{
+void motorEnable(void) {
   digitalWrite(MOTOR_EN, LOW);  //Power ON
 }
-void motorDisable(void)
-{
+void motorDisable(void) {
   digitalWrite(MOTOR_EN, HIGH);  //Power OFF
 }
 
 //SWITCH
-unsigned char switchGet(void)
-{
+unsigned char switchGet(void) {
   unsigned char ret = 0;
   if (digitalRead(SW_R) == LOW) {
     do {
@@ -155,8 +153,7 @@ unsigned char switchGet(void)
 }
 
 //sensor
-unsigned short sensorGetR(void)
-{
+unsigned short sensorGetR(void) {
   digitalWrite(SLED_R, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
     asm("nop \n");
@@ -165,8 +162,7 @@ unsigned short sensorGetR(void)
   digitalWrite(SLED_R, LOW);
   return tmp;
 }
-unsigned short sensorGetL(void)
-{
+unsigned short sensorGetL(void) {
   digitalWrite(SLED_L, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
     asm("nop \n");
@@ -175,8 +171,7 @@ unsigned short sensorGetL(void)
   digitalWrite(SLED_L, LOW);
   return tmp;
 }
-unsigned short sensorGetFL(void)
-{
+unsigned short sensorGetFL(void) {
   digitalWrite(SLED_FL, HIGH);  //LED点灯
   for (int i = 0; i < WAITLOOP_SLED; i++) {
     asm("nop \n");
@@ -185,8 +180,7 @@ unsigned short sensorGetFL(void)
   digitalWrite(SLED_FL, LOW);  //LED消灯
   return tmp;
 }
-unsigned short sensorGetFR(void)
-{
+unsigned short sensorGetFR(void) {
   digitalWrite(SLED_FR, HIGH);
   for (int i = 0; i < WAITLOOP_SLED; i++) {
     asm("nop \n");
@@ -195,7 +189,6 @@ unsigned short sensorGetFR(void)
   digitalWrite(SLED_FR, LOW);
   return tmp;
 }
-short batteryVoltGet(void)
-{
-  return (double)analogReadMilliVolts(AD0) / 10.0 * (10.0 + 51.0) * 1.01;//1.01は補正値
+short batteryVoltGet(void) {
+  return (double)analogReadMilliVolts(AD0) / 10.0 * (10.0 + 51.0) * 1.01;  //1.01は補正値
 }
