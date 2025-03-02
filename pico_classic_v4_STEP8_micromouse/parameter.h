@@ -15,19 +15,19 @@
 #define PARAMETER_H_
 
 //初期パラメータ
-#define TIRE_DIAMETER_INIT (48.0)
-#define TREAD_WIDTH_INIT (65.0)
+#define TIRE_DIAMETER_INIT (48.21)
+#define TREAD_WIDTH_INIT (69.5)
 
-#define REF_SEN_R_INIT 589
-#define REF_SEN_L_INIT 628
+#define REF_SEN_R_INIT 409
+#define REF_SEN_L_INIT 585
 
-#define TH_SEN_R_INIT 300
-#define TH_SEN_L_INIT 215
-#define TH_SEN_FR_INIT 103
-#define TH_SEN_FL_INIT 157
+#define TH_SEN_R_INIT 120
+#define TH_SEN_L_INIT 120
+#define TH_SEN_FR_INIT 99
+#define TH_SEN_FL_INIT 67
 
 #define GOAL_X_INIT 3
-#define GOAL_Y_INIT 3
+#define GOAL_Y_INIT 7
 
 #define WAITLOOP_SLED 300
 

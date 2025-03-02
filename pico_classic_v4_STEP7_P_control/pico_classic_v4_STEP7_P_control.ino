@@ -54,6 +54,7 @@
 
 
 //環境に合わせて変更する
+//ここから
 #define REF_SEN_R 352
 #define REF_SEN_L 327
 
@@ -134,7 +135,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   while (digitalRead(SW_L) & digitalRead(SW_C) & digitalRead(SW_R)) {
-    delay(1);
     continue;
   }
   if (digitalRead(SW_L) == 0) {

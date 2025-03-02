@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//#define AP_MODE
+#define AP_MODE
 
 AsyncWebServer server(80);
 
@@ -20,10 +20,8 @@ AsyncWebServer server(80);
 const char* ssid = "PICO4";
 const char* password = "12345678";
 #else
-//const char* ssid = "使用しているルータのSSID";
-//const char* password = "ルータのパスワード";
-const char* ssid = "JCOM_HOSI";
-const char* password = "890927221266";
+const char* ssid = "使用しているルータのSSID";
+const char* password = "ルータのパスワード";
 #endif
 
 
@@ -308,6 +306,7 @@ void webServerSetup(void) {
 
     Serial.println("saved");
     paramWrite();
+    g_run.pulse = g_run.tire_diameter * PI / (200.0 * microstep);
 
     buzzerEnable(INC_FREQ);
     delay(30);

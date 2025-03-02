@@ -260,6 +260,7 @@ void paramRead(void) {
       flashInit();
       break;
     }
+    g_run.pulse = g_run.tire_diameter * PI / (200.0 * microstep);
     cmds[0] = { "\0" };
     cmds[1] = { "\0" };
   }
