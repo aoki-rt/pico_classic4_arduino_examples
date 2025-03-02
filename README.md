@@ -1,4 +1,6 @@
 # pico_classic4_arduino_examples
+![pico_classic4](images/PiCo_Classic4_image.jpg)
+
 pi:co classic4用 Arduino サンプルスケッチ集です。
 
 ## 動作環境
