@@ -113,5 +113,5 @@ void SENSOR::interrupt(void)
       break;
   }
   cnt++;
-  if (cnt == 4) cnt = 0;
+  if (cnt >= 4) cnt = 0;
 }

@@ -92,11 +92,11 @@ void webServerSetup(void) {
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>Sensor Paramter</h2></p>";
+    html += "<p><h2>Sensor Parameter</h2></p>";
 
     html += "<table align=\"center\">";
     html += "<tr><th>Gain</th><td><input name=\"wall_kp\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.con_wall.kp,3);
+    html += String(g_run.con_wall.kp, 3);
     html += "></td></tr>";
     html += "</table>";
     html += "<br>";
@@ -119,22 +119,30 @@ void webServerSetup(void) {
     html += String(g_sensor.sen_fr.th_wall);
     html += "></th></tr>";
     html += "</table>";
+
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>Tire Paramter</h2></p>";
+    html += "<input type=\"submit\" value=\"Save\">";
+    html += "</form><br>";
+
+
+    html += "<br>";
+    html += "<br>";
+
+    html += "<p><h2>Tire Parameter</h2></p>";
     html += "<table align=\"center\">";
     html += "<tr><th>TIRE_DIAMETER</th><td><input name=\"tire_dia\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tire_diameter,3);
+    html += String(g_run.tire_diameter, 3);
     html += ">mm</td></tr>";
     html += "<tr><th>TREAD_WIDTH</th><td><input name=\"tread_width\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.tread_width,3);
+    html += String(g_run.tread_width, 3);
     html += ">mm</td></tr>";
     html += "</table>";
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>GOAL Paramter</h2></p>";
+    html += "<p><h2>GOAL Parameter</h2></p>";
     html += "<table align=\"center\">";
     html += "<tr><th></th><th>X</th><th>Y</th></tr>";
     html += "<tr><th>AXIS</th><td><input name=\"goal_x\" type=\"text\" size=\"10\" value=";
@@ -146,19 +154,19 @@ void webServerSetup(void) {
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>Accel Paramter</h2></p>";
+    html += "<p><h2>Accel Parameter</h2></p>";
     html += "<table align=\"center\">";
     html += "<tr><th>Search accel</th><td><input name=\"search_acc\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.search_accel,3);
+    html += String(g_run.search_accel, 3);
     html += ">mm</td></tr>";
     html += "<tr><th>Turn accel</th><td><input name=\"turn_acc\" type=\"text\" size=\"10\" value=";
-    html += String(g_run.turn_accel,3);
+    html += String(g_run.turn_accel, 3);
     html += ">mm</td></tr>";
     html += "</table>";
     html += "<br>";
     html += "<br>";
 
-    html += "<p><h2>Speed Paramter</h2></p>";
+    html += "<p><h2>Speed Parameter</h2></p>";
     html += "<table align=\"center\">";
     html += "<tr><th>Search speed</th><td><input name=\"search_spd\" type=\"text\" size=\"10\" value=";
     html += String(g_run.search_speed);
@@ -242,7 +250,7 @@ void webServerSetup(void) {
   });
 
   server.on("/voltage", HTTP_GET, [](AsyncWebServerRequest* request) {
-    request->send(200, "text/plain", String(g_sensor.battery_value)+"mV");
+    request->send(200, "text/plain", String(g_sensor.battery_value) + "mV");
   });
 
   server.on("/left_value", HTTP_GET, [](AsyncWebServerRequest* request) {

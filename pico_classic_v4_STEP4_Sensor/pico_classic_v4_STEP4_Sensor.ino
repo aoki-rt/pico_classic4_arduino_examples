@@ -75,7 +75,7 @@ void IRAM_ATTR onTimer1(void) {
       break;
   }
   cnt++;
-  if (cnt == 4) cnt = 0;
+  if (cnt >= 4) cnt = 0;
   portEXIT_CRITICAL_ISR(&g_timer_mux);
 }
 
