@@ -27,7 +27,7 @@
 #define TH_SEN_FL_INIT 67
 
 #define GOAL_X_INIT 3
-#define GOAL_Y_INIT 7
+#define GOAL_Y_INIT 3
 
 #define WAITLOOP_SLED 300
 

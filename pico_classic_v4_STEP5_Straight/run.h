@@ -40,7 +40,7 @@ public:
   void stop(void);
   void accelerate(int len, int finish_speed);
   void oneStep(int len, int init_speed);
-  void decelerate(int len, float init_speed);
+  void decelerate(int len, int init_speed);
 
 private:
   int step_lr_len,step_lr;

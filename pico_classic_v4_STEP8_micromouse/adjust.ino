@@ -181,7 +181,7 @@ unsigned char ADJUST::modeExec(unsigned char l_mode) {
       delay(30);
       buzzerDisable();
       webServerSetup();
-      //      viewAdc();
+      //      adcView();
       break;
     case 2:
       straightCheck(9);
