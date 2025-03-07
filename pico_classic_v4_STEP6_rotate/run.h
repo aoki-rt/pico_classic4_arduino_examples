@@ -42,7 +42,7 @@ public:
   void stop(void);
   void accelerate(int len, int finish_speed);
   void oneStep(int len, int init_speed);
-  void decelerate(int len, float init_speed);
+  void decelerate(int len, int init_speed);
   void rotate(t_local_direction dir, int times);
 
 private:

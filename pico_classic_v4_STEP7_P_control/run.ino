@@ -29,9 +29,7 @@ RUN::~RUN() {
 }
 
 //割り込み
-void controlInterrupt(void) {
-  g_run.interrupt();
-}
+void controlInterrupt(void) {  g_run.interrupt();}
 
 void RUN::interrupt(void) {  //割り込み内からコール
 
@@ -124,7 +122,7 @@ void RUN::oneStep(int len, int init_speed) {
   }
 }
 
-void RUN::decelerate(int len, float init_speed) {
+void RUN::decelerate(int len, int init_speed) {
   int obj_step;
 
   accel = 1.5;

@@ -32,10 +32,6 @@ typedef struct
   bool enable;
 } t_control;
 
-typedef enum {
-  e_counter_clear,
-  e_counter_notClear
-} t_count_flag;
 
 typedef enum {
   MOT_FORWARD = 1,  //TMC5240の方向に合わせた数字
@@ -66,7 +62,7 @@ public:
   void stop(void);
   void accelerate(int len, int finish_speed);
   void oneStep(int len, int init_speed);
-  void decelerate(int len, float init_speed);
+  void decelerate(int len, int init_speed);
   void rotate(t_local_direction dir, int times);
 
 private:

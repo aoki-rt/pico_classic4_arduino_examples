@@ -104,7 +104,7 @@ void RUN::oneStep(int len, int init_speed) {
   }
 }
 
-void RUN::decelerate(int len, float init_speed) {
+void RUN::decelerate(int len, int init_speed) {
   int obj_step;
 
   accel = 1.5;
