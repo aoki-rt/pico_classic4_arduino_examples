@@ -15,14 +15,6 @@
 
 #ifndef SRC_RUN_H_
 #define SRC_RUN_H_
-/*
-#define microstep 16
-#define TMC5240_PULSE (tire_diameter * PI / (200.0 * microstep))
-//#define TMC5240_VELOCITY (TMC5240_PULSE*0.739)//12400000/2/2^23=0.739 -50c
-#define TMC5240_VELOCITY (TMC5240_PULSE * 0.787)  //13200000/2/2^23=0.787 +50c
-
-#define TREAD_CIRCUIT (tread_width * PI / 4)
-*/
 
 typedef struct
 {

@@ -124,7 +124,7 @@ void RUN::straight(int len, int init_speed, int max_sp, int finish_speed) {
   lower_speed_limit = (double)finish_speed;
 
   con_wall.enable = true;
-  speedSet(init_speed, init_speed);
+  speedSet(speed, speed);
   dirSet(MOT_FORWARD, MOT_FORWARD);
   obj_step = (int)((float)len * 2.0 / pulse);
   controlInterruptStart();

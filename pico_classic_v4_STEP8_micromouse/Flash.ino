@@ -20,6 +20,12 @@ void flashInit(void) {
 
   Serial.printf("\n\r parameter init ");
   Serial.println(file_tmp);
+
+  controlInterruptStop();
+  sensorInterruptStop();
+  delay(100);
+
+
   cmd_tmp = "ref_sen_r " + String(REF_SEN_R_INIT) + '\n';
   writeFile(SPIFFS, file_tmp, cmd_tmp);
   cmd_tmp = "ref_sen_l " + String(REF_SEN_L_INIT) + '\n';
@@ -51,6 +57,9 @@ void flashInit(void) {
   appendFile(SPIFFS, file_tmp, cmd_tmp);
   cmd_tmp = "max_speed " + String(MAX_SPEED_INIT) + '\n';
   appendFile(SPIFFS, file_tmp, cmd_tmp);
+
+  controlInterruptStart();
+  sensorInterruptStart();
 }
 
 
