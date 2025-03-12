@@ -16,10 +16,6 @@
 
 SENSOR g_sensor;
 
-
-SENSOR::SENSOR() {  //コンストラクタ
-}
-
 void sensorInterrupt(void) {
   g_sensor.interrupt();
 }
@@ -91,7 +87,6 @@ void SENSOR::interrupt(void)
       }
       if(battery_value < BATT_MIN){
         buzzerEnable(400);
-//        motorDisable();
         ledSet(0);
       }
       break;

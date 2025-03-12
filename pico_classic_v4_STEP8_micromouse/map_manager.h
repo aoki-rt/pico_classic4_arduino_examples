@@ -19,7 +19,7 @@
 #define MAZESIZE_Y (16)  //迷路の大きさ(MAZESIZE_Y * MAZESIZE_Y)迷路
 
 #define _UNKNOWN 2  //壁があるかないか判らない状態の場合の値
-#define NOWALL 0    //壁がないばあいの値
+#define NOWALL 0    //壁がない場合の値
 #define WALL 1      //壁がある場合の値
 #define VWALL 3     //仮想壁の値(未使用)
 
@@ -57,7 +57,6 @@ typedef struct
 class MapManager {
 public:
   MapManager();
-  virtual ~MapManager();
 
   t_position mypos;
   short goal_mx, goal_my;

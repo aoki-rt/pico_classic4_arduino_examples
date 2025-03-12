@@ -16,14 +16,6 @@
 
 SEARCH g_search;
 
-SEARCH::SEARCH() {
-  // TODO Auto-generated constructor stub
-}
-
-SEARCH::~SEARCH() {
-  // TODO Auto-generated destructor stub
-}
-
 void SEARCH::lefthand(void) {
   g_run.accelerate(HALF_SECTION, g_run.search_speed);
 

@@ -18,8 +18,6 @@
 
 class SEARCH {
 public:
-	SEARCH();
-	virtual ~SEARCH();
 	void lefthand(void);
 	void adachi(char gx, char gy);
 private:

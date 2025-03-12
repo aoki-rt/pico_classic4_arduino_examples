@@ -32,7 +32,6 @@ typedef struct
   bool enable;
 } t_control;
 
-
 typedef enum {
   MOT_FORWARD = 1,  //TMC5240の方向に合わせた数字
   MOT_BACK = 2
@@ -53,7 +52,6 @@ public:
 
 
   RUN();
-  virtual ~RUN();
   void interrupt(void);
   void counterClear(void);
   void dirSet(t_CW_CCW dir_left, t_CW_CCW dir_right);

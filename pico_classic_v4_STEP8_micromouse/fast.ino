@@ -16,14 +16,6 @@
 
 FAST g_fast;
 
-FAST::FAST() {
-  // TODO Auto-generated constructor stub
-}
-
-FAST::~FAST() {
-  // TODO Auto-generated destructor stub
-}
-
 void FAST::run(short gx, short gy) {
   t_global_direction glob_nextdir;
   int straight_count = 0;

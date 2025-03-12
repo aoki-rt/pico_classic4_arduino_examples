@@ -18,18 +18,15 @@
 RUN g_run;
 
 RUN::RUN() {
-  // TODO Auto-generated constructor stub
   speed = 0.0;
   accel = 0.0;
   con_wall.kp = CON_WALL_KP;
 }
 
-RUN::~RUN() {
-  // TODO Auto-generated destructor stub
-}
-
 //割り込み
-void controlInterrupt(void) {  g_run.interrupt();}
+void controlInterrupt(void) {
+  g_run.interrupt();
+}
 
 void RUN::interrupt(void) {  //割り込み内からコール
 
@@ -90,7 +87,7 @@ void RUN::accelerate(int len, int finish_speed) {
   speed = min_speed = MIN_SPEED;
   max_speed = finish_speed;
   counterClear();
-  speedSet(MIN_SPEED,MIN_SPEED);
+  speedSet(MIN_SPEED, MIN_SPEED);
   dirSet(MOT_FORWARD, MOT_FORWARD);
   obj_step = (int)((float)len * 2.0 / PULSE);
   while (1) {
@@ -109,7 +106,7 @@ void RUN::oneStep(int len, int init_speed) {
   max_speed = init_speed;
   speed = min_speed = init_speed;
   counterClear();
-  speedSet(init_speed,init_speed);   
+  speedSet(init_speed, init_speed);
   dirSet(MOT_FORWARD, MOT_FORWARD);
   obj_step = (int)((float)len * 2.0 / PULSE);
 
@@ -129,7 +126,7 @@ void RUN::decelerate(int len, int init_speed) {
   max_speed = init_speed;
   speed = min_speed = init_speed;
   counterClear();
-  speedSet(init_speed,init_speed);   
+  speedSet(init_speed, init_speed);
   dirSet(MOT_FORWARD, MOT_FORWARD);
   obj_step = (int)((float)len * 2.0 / PULSE);
 
@@ -166,10 +163,10 @@ void RUN::rotate(t_local_direction dir, int times) {
 
   switch (dir) {
     case right:
-      dirSet(MOT_FORWARD, MOT_BACK);    
+      dirSet(MOT_FORWARD, MOT_BACK);
       break;
     case left:
-      dirSet(MOT_BACK,MOT_FORWARD);
+      dirSet(MOT_BACK, MOT_FORWARD);
       break;
     default:
       dirSet(MOT_FORWARD, MOT_FORWARD);

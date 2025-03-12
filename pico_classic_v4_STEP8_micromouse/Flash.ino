@@ -25,7 +25,6 @@ void flashInit(void) {
   sensorInterruptStop();
   delay(100);
 
-
   cmd_tmp = "ref_sen_r " + String(REF_SEN_R_INIT) + '\n';
   writeFile(SPIFFS, file_tmp, cmd_tmp);
   cmd_tmp = "ref_sen_l " + String(REF_SEN_L_INIT) + '\n';
@@ -313,7 +312,6 @@ void readFile(fs::FS &fs, String path) {
 void writeFile(fs::FS &fs, String path, String message) {
   Serial.printf("Writing file: ");
   Serial.println(path);
-  //  Serial.println(message);
 
   File file = fs.open(path, FILE_WRITE);
   if (!file) {
@@ -321,7 +319,6 @@ void writeFile(fs::FS &fs, String path, String message) {
     return;
   }
   if (file.print(message)) {
-    //    Serial.println("- file written");
   } else {
     Serial.println("- frite failed");
   }
@@ -331,7 +328,6 @@ void writeFile(fs::FS &fs, String path, String message) {
 void appendFile(fs::FS &fs, String path, String message) {
   Serial.printf("Appending to file: ");
   Serial.println(path);
-  //  Serial.println(message);
 
   File file = fs.open(path, FILE_APPEND);
   if (!file) {
@@ -339,7 +335,6 @@ void appendFile(fs::FS &fs, String path, String message) {
     return;
   }
   if (file.print(message)) {
-    //    Serial.println("- message appended");
   } else {
     Serial.println("- append failed");
   }

@@ -17,8 +17,6 @@
 
 class FAST {
 public:
-  FAST();
-  virtual ~FAST();
 
   void run(short gx, short gy);
 private:

@@ -32,7 +32,6 @@ typedef struct
 
 class SENSOR{
 public:
-  SENSOR();
 	volatile t_sensor sen_r, sen_l, sen_fr, sen_fl;
 	volatile short battery_value;
 	void interrupt(void);

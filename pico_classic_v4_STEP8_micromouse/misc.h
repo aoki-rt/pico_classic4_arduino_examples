@@ -20,8 +20,6 @@
 class MISC {
 
 public:
-	MISC();
-	virtual ~MISC();
   unsigned char mode_select;  
   void modeExec(int mode);
 	short buttonInc(short _data, short limit, short limit_data);
